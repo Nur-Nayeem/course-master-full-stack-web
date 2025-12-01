@@ -1,8 +1,9 @@
 import { Link } from "react-router";
 import { FaStar } from "react-icons/fa";
 import CouresCard from "../../CoursesComponents/CourseCard/CourseCard";
+import { populerCourses } from "../../../data/AllCourses";
 
-const PopulerCourses = ({ courses = [] }) => {
+const PopulerCourses = () => {
   return (
     <section className="py-16 ">
       <div className="container mx-auto px-4">
@@ -12,7 +13,7 @@ const PopulerCourses = ({ courses = [] }) => {
 
         {/* Courses Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-          {courses.map((course, i) => (
+          {populerCourses.map((course, i) => (
             <CouresCard course={course} key={i} />
           ))}
         </div>
