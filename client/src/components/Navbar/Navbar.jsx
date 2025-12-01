@@ -43,13 +43,13 @@ const Navbar = () => {
         </div>
         <div className="hidden flex-1  lg:flex items-center justify-center gap-9 ">
           {navLinks.map((link) => (
-            <Link
+            <NavLink
               key={link.href}
               to={link.href}
               className="font-medium leading-normal text-secondary hover:text-primary"
             >
               {link.label}
-            </Link>
+            </NavLink>
           ))}
         </div>
         <div className="flex-1 flex items-center gap-3.5 justify-end">

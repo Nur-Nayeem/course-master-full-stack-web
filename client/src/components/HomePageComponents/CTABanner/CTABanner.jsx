@@ -17,7 +17,7 @@ const CtaBanner = () => {
             <div className="mt-8 flex justify-center">
               <Link
                 to="/register"
-                className="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-white text-primary text-base font-bold transition-transform hover:scale-105"
+                className="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-white text-primary text-base font-bold transition-transform duration-300 hover:scale-102"
               >
                 Sign up for free
               </Link>

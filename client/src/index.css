@@ -8,8 +8,12 @@
   --color-secondary: #333333;
 }
 
+.active {
+  @apply text-primary font-semibold;
+}
+
 .btn-primary {
-  @apply px-4 py-3 rounded-xl bg-primary text-white font-medium 
+  @apply rounded-xl bg-primary text-white 
          hover:bg-primary/90 active:scale-95 transition-all duration-200 
          shadow-sm;
 }

@@ -19,10 +19,7 @@ const PopulerCourses = ({ courses = [] }) => {
 
         {/* CTA Button */}
         <div className="text-center mt-10">
-          <Link
-            to="/courses"
-            className="px-6 py-3 rounded-xl bg-primary text-white font-semibold hover:bg-primary/90 transition-all duration-200"
-          >
+          <Link to="/courses" className="btn-primary px-4 py-3 font-medium">
             Browse All Courses
           </Link>
         </div>

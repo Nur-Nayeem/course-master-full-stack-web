@@ -5,6 +5,7 @@ import Login from "../pages/Auth/Login";
 import Register from "../pages/Auth/Register";
 import Dashboard from "../pages/Dashboard/Dashboard";
 import PrivateRoute from "./ProtectedRoutes/PrivateRoute";
+import Courses from "../pages/Courses/Courses";
 
 const router = createBrowserRouter([
   {
@@ -14,6 +15,10 @@ const router = createBrowserRouter([
       {
         index: true,
         Component: Home,
+      },
+      {
+        path: "/courses",
+        Component: Courses,
       },
       {
         path: "/dashboard",
