@@ -7,11 +7,13 @@ import { IoEye, IoEyeOff } from "react-icons/io5";
 import { FcGoogle } from "react-icons/fc";
 import { Link, useNavigate } from "react-router";
 import useAxios from "../../hooks/useAxios";
+import { useAuth } from "../../hooks/useAuth";
 
 export default function Register() {
   const [showPass, setShowPass] = useState(false);
   const navigate = useNavigate();
   const axiosInstance = useAxios();
+  const { login, setLoading } = useAuth();
 
   const {
     register,
@@ -21,15 +23,17 @@ export default function Register() {
 
   const onSubmit = async (data) => {
     try {
+      setLoading(true);
       const res = await axiosInstance.post("/api/auth/register", data);
 
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("user", JSON.stringify(res.data.user));
+      login(res.data.user, res.data.token);
+      setLoading(false);
       console.log("resigter successfull");
 
       navigate("/");
     } catch (err) {
       alert(err.response?.data?.message || "Registration failed");
+      setLoading(false);
     }
   };
 

@@ -1,10 +1,16 @@
 import React from "react";
 import { Outlet } from "react-router";
+import Navbar from "../components/Navbar/Navbar";
 
 const MainLayoute = () => {
   return (
     <div>
-      <Outlet />
+      <header>
+        <Navbar />
+      </header>
+      <main>
+        <Outlet />
+      </main>
     </div>
   );
 };

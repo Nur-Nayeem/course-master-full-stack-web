@@ -6,11 +6,13 @@ import { IoEye, IoEyeOff } from "react-icons/io5";
 import { FcGoogle } from "react-icons/fc";
 import { Link, useNavigate } from "react-router";
 import useAxios from "../../hooks/useAxios";
+import { useAuth } from "../../hooks/useAuth";
 
 export default function Login() {
   const [showPass, setShowPass] = useState(false);
   const navigate = useNavigate();
   const axiosInstance = useAxios();
+  const { login, setLoading } = useAuth();
 
   const {
     register,
@@ -20,14 +22,16 @@ export default function Login() {
 
   const onSubmit = async (data) => {
     try {
+      setLoading(true);
       const res = await axiosInstance.post("/api/auth/login", data);
 
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("user", JSON.stringify(res.data.user));
+      login(res.data.user, res.data.token);
+      setLoading(false);
 
       navigate("/");
     } catch (err) {
       alert(err.response?.data?.message || "Login failed");
+      setLoading(false);
     }
   };
 
