@@ -1,16 +1,20 @@
 import React from "react";
 import { Outlet } from "react-router";
 import Navbar from "../components/Navbar/Navbar";
+import Footer from "../components/Footer/Footer";
 
 const MainLayoute = () => {
   return (
-    <div>
+    <div className="bg-gray-100">
       <header>
         <Navbar />
       </header>
-      <main>
+      <main className="pt-16">
         <Outlet />
       </main>
+      <footer>
+        <Footer />
+      </footer>
     </div>
   );
 };

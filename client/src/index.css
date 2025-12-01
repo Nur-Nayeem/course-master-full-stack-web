@@ -7,3 +7,13 @@
   --color-primary: #8b5cf6;
   --color-secondary: #333333;
 }
+
+.btn-primary {
+  @apply px-4 py-3 rounded-xl bg-primary text-white font-medium 
+         hover:bg-primary/90 active:scale-95 transition-all duration-200 
+         shadow-sm;
+}
+
+.gradient-cta-banner {
+  @apply bg-linear-to-r from-[#8b5cf6] to-[#a78bfa];
+}

@@ -1,6 +1,6 @@
 import React from "react";
 import { FaBars, FaLaptopCode } from "react-icons/fa";
-import { Link } from "react-router";
+import { Link, NavLink } from "react-router";
 import { useAuth } from "../../hooks/useAuth";
 const Navbar = () => {
   const navLinks = [
@@ -24,13 +24,13 @@ const Navbar = () => {
               className="menu menu-sm dropdown-content bg-color bg-white rounded-box z-1 mt-3 w-52 p-4 space-y-3.5 shadow"
             >
               {navLinks.map((link) => (
-                <Link
+                <NavLink
                   key={link.href}
                   to={link.href}
                   className="font-medium leading-normal text-secondary hover:text-primary"
                 >
                   {link.label}
-                </Link>
+                </NavLink>
               ))}
             </ul>
           </div>
