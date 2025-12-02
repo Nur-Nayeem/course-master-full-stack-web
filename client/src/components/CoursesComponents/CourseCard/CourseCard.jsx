@@ -2,7 +2,7 @@ import React from "react";
 import { FaStar } from "react-icons/fa";
 import { Link } from "react-router";
 
-const CouresCard = ({ course }) => {
+const CourseCard = ({ course }) => {
   return (
     <div className="bg-white rounded-xl shadow hover:shadow-lg transition-all duration-200 overflow-hidden">
       {/* Image */}
@@ -16,11 +16,10 @@ const CouresCard = ({ course }) => {
 
       {/* Content */}
       <div className="p-4 flex flex-col justify-between h-48">
+        <h3 className="font-semibold text-lg text-secondary line-clamp-2">
+          {course.title}
+        </h3>
         <div className="space-y-3">
-          <h3 className="font-semibold text-lg text-secondary line-clamp-2">
-            {course.title}
-          </h3>
-
           <p className="text-sm text-gray-500">{course.instructor}</p>
 
           {/* Rating */}
@@ -30,21 +29,24 @@ const CouresCard = ({ course }) => {
               {course.rating || "4.8"}
             </span>
           </div>
-        </div>
 
-        {/* Price */}
-        <div className="flex justify-between items-center">
-          <span className="text-lg font-bold text-primary">
-            ${course.price}
-          </span>
+          {/* Price */}
+          <div className="flex justify-between items-center">
+            <span className="text-lg font-bold text-primary">
+              ${course.price}
+            </span>
 
-          <Link to={`/courses/${course._id}`} className="px-3 py-1 btn-primary">
-            View Details
-          </Link>
+            <Link
+              to={`/courses/${course._id}`}
+              className="px-3 py-1 btn-primary"
+            >
+              View Details
+            </Link>
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default CouresCard;
+export default CourseCard;
