@@ -1,65 +1,64 @@
 import express from "express";
 import Course from "../models/Course.js";
-const router = express.Router();
 
-//    GET ALL COURSES (PUBLIC)
+const router = express.Router();
 
 router.get("/", async (req, res) => {
   try {
-    let { page, limit, search, category, sort } = req.query;
+    let { page = 1, limit = 12, search, category, sort, tags } = req.query;
+    page = parseInt(page);
+    limit = parseInt(limit);
 
-    page = parseInt(page) || 1;
-    limit = parseInt(limit) || 12;
+    const filter = {};
 
-    const query = {};
-
-    // Searching
     if (search) {
-      query.$or = [
+      filter.$or = [
         { title: { $regex: search, $options: "i" } },
         { instructor: { $regex: search, $options: "i" } },
       ];
     }
 
-    // Filter by category
-    if (category) {
-      query.category = category;
+    if (category) filter.category = category;
+    if (tags) {
+      const tagArr = tags.split(",").map((t) => t.trim());
+      filter.tags = { $in: tagArr };
     }
 
-    // Sorting
-    let sortQuery = {};
-    if (sort === "price_asc") sortQuery.price = 1;
-    else if (sort === "price_desc") sortQuery.price = -1;
+    let sortQuery = { createdAt: -1 };
+    if (sort === "price_asc") sortQuery = { price: 1 };
+    else if (sort === "price_desc") sortQuery = { price: -1 };
 
-    const total = await Course.countDocuments(query);
+    const total = await Course.countDocuments(filter);
 
-    const courses = await Course.find(query)
+    const courses = await Course.find(filter)
       .sort(sortQuery)
       .skip((page - 1) * limit)
-      .limit(limit);
+      .limit(limit)
+      .lean();
 
     res.send({
       page,
-      totalPages: Math.ceil(total / limit),
+      limit,
       totalCourses: total,
+      totalPages: Math.ceil(total / limit),
       courses,
     });
   } catch (err) {
+    console.error(err);
     res.status(500).send({ message: "Server error", error: err.message });
   }
 });
 
-//    GET SINGLE COURSE DETAILS
-
+// GET: Get single course by ID
 router.get("/:id", async (req, res) => {
   try {
-    const course = await Course.findById(req.params.id);
+    const course = await Course.findById(req.params.id).lean();
+    if (!course) return res.status(404).send({ message: "Course not found" });
 
-    if (!course) return res.status(404).json({ message: "Course not found" });
-
-    res.json(course);
+    res.send({ course });
   } catch (err) {
-    res.status(500).json({ message: "Invalid ID format" });
+    console.error(err);
+    res.status(500).send({ message: "Server error", error: err.message });
   }
 });
 
