@@ -6,7 +6,7 @@ import useAxios from "../../hooks/useAxios";
 const AllCoursesPage = () => {
   const [courses, setCourses] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
-  const axiosInstanse = useAxios();
+  const axiosInstance = useAxios();
 
   // Filters
   const [search, setSearch] = useState("");
@@ -15,51 +15,34 @@ const AllCoursesPage = () => {
 
   // Pagination
   const [page, setPage] = useState(1);
-  const limit = 12; // courses per page
+  const limit = 12;
 
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchCourses = async () => {
       setLoading(true);
-
       try {
-        const res = await axiosInstanse.get("/api/courses", {
-          params: {
-            page,
-            limit,
-            search,
-            category,
-            sort,
-          },
+        const res = await axiosInstance.get("/api/courses", {
+          params: { page, limit, search, category, sort },
         });
 
-        setCourses(res.data.courses);
-        setTotalPages(res.data.totalPages);
+        // Ensure courses is an array
+        const courseList = Array.isArray(res.data.courses)
+          ? res.data.courses
+          : [];
+
+        setCourses(courseList);
+        setTotalPages(res.data.totalPages || 1);
       } catch (err) {
         console.error(err);
         alert("Failed to load courses");
       }
-
       setLoading(false);
     };
+
     fetchCourses();
-  }, [axiosInstanse, page, search, category, sort]);
-
-  const handleSearchChange = (e) => {
-    setSearch(e.target.value);
-    setPage(1); // reset pagination on new search
-  };
-
-  const handleCategoryChange = (e) => {
-    setCategory(e.target.value);
-    setPage(1);
-  };
-
-  const handleSortChange = (e) => {
-    setSort(e.target.value);
-    setPage(1);
-  };
+  }, [axiosInstance, page, search, category, sort]);
 
   return (
     <section className="py-16">
@@ -71,23 +54,28 @@ const AllCoursesPage = () => {
         {/* Search + Filters */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-8">
           {/* Search Input */}
-          <label className="flex items-center bg-transparent max-w-md w-full  px-4 h-12 rounded-xl border border-gray-300 focus-within:ring focus-within:ring-primary">
+          <label className="flex items-center bg-transparent max-w-md w-full px-4 h-12 rounded-xl border border-gray-300 focus-within:ring focus-within:ring-primary">
             <IoSearchSharp className="text-xl text-gray-500" />
             <input
               type="search"
               placeholder="Search by title or instructor..."
               value={search}
-              onChange={handleSearchChange}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setPage(1);
+              }}
               className="ml-2 outline-none w-full"
             />
           </label>
 
           {/* Filters */}
           <div className="flex flex-col max-w-md w-full md:flex-row items-center gap-4">
-            {/* Sort */}
             <select
               value={sort}
-              onChange={handleSortChange}
+              onChange={(e) => {
+                setSort(e.target.value);
+                setPage(1);
+              }}
               className="px-4 py-2 rounded-xl w-full border border-gray-300 focus:outline-none focus:ring focus:ring-primary"
             >
               <option value="">Sort By</option>
@@ -95,10 +83,12 @@ const AllCoursesPage = () => {
               <option value="price_desc">Price: High → Low</option>
             </select>
 
-            {/* Category Filter */}
             <select
               value={category}
-              onChange={handleCategoryChange}
+              onChange={(e) => {
+                setCategory(e.target.value);
+                setPage(1);
+              }}
               className="px-4 py-2 rounded-xl w-full border border-gray-300 focus:outline-none focus:ring focus:ring-primary"
             >
               <option value="">All Categories</option>
@@ -110,7 +100,7 @@ const AllCoursesPage = () => {
           </div>
         </div>
 
-        {/* Loading State */}
+        {/* Loading */}
         {loading && (
           <p className="text-center text-gray-500 py-10">Loading courses...</p>
         )}
@@ -118,8 +108,8 @@ const AllCoursesPage = () => {
         {/* Courses Grid */}
         {!loading && courses.length > 0 && (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-            {courses.map((course) => (
-              <CourseCard key={course._id} course={course} />
+            {courses.map((course, idx) => (
+              <CourseCard key={course._id || idx} course={course} />
             ))}
           </div>
         )}
