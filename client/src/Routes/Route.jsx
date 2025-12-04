@@ -7,6 +7,16 @@ import PrivateRoute from "./ProtectedRoutes/PrivateRoute";
 import Courses from "../pages/Courses/Courses";
 import CourseDetailsPage from "../pages/CourseDetails/CourseDetailsPage";
 import StudentDashboard from "../pages/Dashboard/StudentDashboard";
+import CoursePlayer from "../pages/Courses/CoursePlayer";
+import AdminLayout from "../Layoutes/AdminLayout";
+import AdminRoute from "./adminRoute/AdminRoute";
+import AdminCourses from "../pages/Admin/AdminCoursesManager";
+import AdminCourseCreate from "../pages/Admin/AdminCourseCreate";
+import AdminCourseEdit from "../pages/Admin/AdminCourseEdit";
+import AdminCourseEnrollments from "../pages/Admin/AdminCourseEnrollments";
+import AdminAssignments from "../pages/Admin/AdminAssignments";
+import AdminDashboard from "../pages/Admin/AdminDashboard";
+import AdminAnalytics from "../pages/Admin/AdminAnalytics";
 
 const router = createBrowserRouter([
   {
@@ -27,7 +37,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/courses/:id/player",
-        element: <h2>Course Player</h2>,
+        element: (
+          <PrivateRoute>
+            <CoursePlayer />
+          </PrivateRoute>
+        ),
       },
       {
         path: "/dashboard",
@@ -39,7 +53,16 @@ const router = createBrowserRouter([
       },
     ],
   },
-
+  {
+    path: "/admin",
+    element: (
+      <PrivateRoute>
+        <AdminRoute>
+          <AdminLayout />
+        </AdminRoute>
+      </PrivateRoute>
+    ),
+  },
   {
     path: "/login",
     Component: Login,
