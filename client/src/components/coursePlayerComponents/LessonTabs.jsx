@@ -6,6 +6,8 @@ import TabQuiz from "./Tabs/TabQuiz";
 
 const LessonTabs = ({
   currentLesson,
+  isCompleted,
+  onMarkComplete,
   assignmentLink,
   setAssignmentLink,
   onSubmitAssignment,
@@ -47,12 +49,17 @@ const LessonTabs = ({
         <Tab.Panels className="p-6 md:p-8">
           {/* Overview */}
           <Tab.Panel>
-            <TabOverview lesson={currentLesson} />
+            <TabOverview
+              lesson={currentLesson}
+              isCompleted={isCompleted}
+              onMarkComplete={onMarkComplete}
+            />
           </Tab.Panel>
 
           {/* Assignment */}
           <Tab.Panel>
             <TabAssignment
+              lesson={currentLesson}
               link={assignmentLink}
               setLink={setAssignmentLink}
               onSubmit={onSubmitAssignment}

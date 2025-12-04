@@ -46,6 +46,23 @@ export default function CoursePlayer() {
     fetchData();
   }, [id, axios, axiosSecure]);
 
+  const handleMarkComplete = async (lessonIndex) => {
+    if (!enrollment) return;
+    try {
+      const res = await axiosSecure.post(
+        `/api/enrollments/${enrollment._id}/complete`,
+        { lessonIndex }
+      );
+      setEnrollment((p) => ({
+        ...p,
+        progress: res.data.progress,
+        lessonsCompleted: res.data.lessonsCompleted,
+      }));
+    } catch (err) {
+      alert(err.response?.data?.message || "Error marking complete");
+    }
+  };
+
   const handleSubmitQuiz = async () => {
     const lesson = course.lessons[selectedLesson];
     let score = 0;
@@ -106,6 +123,7 @@ export default function CoursePlayer() {
     );
 
   const currentLesson = course.lessons[selectedLesson];
+  const isCompleted = enrollment.lessonsCompleted?.includes(selectedLesson);
   console.log(currentLesson?.videoUrl);
 
   return (
@@ -123,6 +141,8 @@ export default function CoursePlayer() {
           activeTab={activeTab}
           setActiveTab={setActiveTab}
           currentLesson={currentLesson}
+          isCompleted={isCompleted}
+          onMarkComplete={() => handleMarkComplete(selectedLesson)}
           assignmentLink={assignmentLink}
           setAssignmentLink={setAssignmentLink}
           onSubmitAssignment={handleSubmitAssignment}
@@ -140,6 +160,21 @@ export default function CoursePlayer() {
           }
         />
       </div>
+
+      {/* right sidebar */}
+      <aside className="w-full lg:mt-16 lg:w-96 bg-white border-l border-gray-200 flex flex-col h-full">
+        <ProgressHeader
+          enrollment={enrollment}
+          totalLessons={course.lessons.length}
+        />
+        <LessonSidebar
+          lessons={course.lessons}
+          selectedLesson={selectedLesson}
+          setSelectedLesson={setSelectedLesson}
+          setActiveTab={setActiveTab}
+          completedLessons={enrollment.lessonsCompleted || []}
+        />
+      </aside>
     </div>
   );
 }

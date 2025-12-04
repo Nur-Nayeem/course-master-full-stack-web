@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { IoSearchSharp } from "react-icons/io5";
 import CourseCard from "../../components/CoursesComponents/CourseCard/CourseCard";
 import useAxios from "../../hooks/useAxios";
+import ListingSceletonLoading from "../../components/CoursesComponents/ListingSceletonLoading";
 
 const AllCoursesPage = () => {
   const [courses, setCourses] = useState([]);
@@ -101,9 +102,7 @@ const AllCoursesPage = () => {
         </div>
 
         {/* Loading */}
-        {loading && (
-          <p className="text-center text-gray-500 py-10">Loading courses...</p>
-        )}
+        {loading && <ListingSceletonLoading />}
 
         {/* Courses Grid */}
         {!loading && courses.length > 0 && (
