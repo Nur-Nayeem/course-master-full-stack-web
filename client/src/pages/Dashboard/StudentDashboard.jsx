@@ -4,6 +4,7 @@ import { BiPlayCircle } from "react-icons/bi";
 import StatOverview from "../../components/StudentDashBoardComponents/StatOverview";
 import DashBoardCourseCards from "../../components/StudentDashBoardComponents/DashBoardCourseCards";
 import EmptyState from "../../components/StudentDashBoardComponents/EmptyState";
+import DashBoardSceletonLoading from "../../components/StudentDashBoardComponents/DashBoardSceletonLoading";
 
 const StudentDashboard = () => {
   const axiosSecureInstance = useAxiosSecure();
@@ -43,7 +44,7 @@ const StudentDashboard = () => {
         </div>
 
         {loading ? (
-          <h2 className="pt-20">Loading...</h2>
+          <DashBoardSceletonLoading />
         ) : (
           <>
             {/* stats overview */}

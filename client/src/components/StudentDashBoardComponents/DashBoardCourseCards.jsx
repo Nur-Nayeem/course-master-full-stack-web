@@ -1,4 +1,5 @@
 import React from "react";
+import { FaAward } from "react-icons/fa";
 import { Link } from "react-router";
 
 const DashBoardCourseCards = ({ course, isCompleted, en }) => {
@@ -54,7 +55,7 @@ const DashBoardCourseCards = ({ course, isCompleted, en }) => {
             to={`/courses/${course._id}/player`}
             className="block w-full text-center py-2.5 rounded-lg font-medium text-sm transition-colors border border-gray-200 hover:border-primary hover:text-primary active:bg-gray-50"
           >
-            {isCompleted ? "Review Course" : "Continue Learning"}
+            {isCompleted ? "Learn Again" : "Continue Learning"}
           </Link>
         </div>
       </div>
