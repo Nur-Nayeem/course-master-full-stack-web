@@ -4,6 +4,7 @@ import useAxiosSecure from "../../hooks/useAxiosSecure";
 import useAxios from "../../hooks/useAxios";
 import PlayerHeader from "../../components/coursePlayerComponents/PlayerHeader";
 import VideoPlayer from "../../components/coursePlayerComponents/VideoPlayer";
+import LessonTabs from "../../components/coursePlayerComponents/LessonTabs";
 export default function CoursePlayer() {
   const { id } = useParams();
   const axiosSecure = useAxiosSecure();
@@ -12,7 +13,9 @@ export default function CoursePlayer() {
   const [course, setCourse] = useState(null);
   const [enrollment, setEnrollment] = useState(null);
   const [selectedLesson, setSelectedLesson] = useState(0);
+  const [activeTab, setActiveTab] = useState("overview");
   const [loading, setLoading] = useState(true);
+  const [assignmentLink, setAssignmentLink] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -37,6 +40,21 @@ export default function CoursePlayer() {
     };
     fetchData();
   }, [id, axios, axiosSecure]);
+
+  const handleSubmitAssignment = async () => {
+    if (!assignmentLink) return alert("Please provide a link");
+    try {
+      const res = await axiosSecure.post(
+        `/api/enrollments/${enrollment._id}/assignment`,
+        { lessonIndex: selectedLesson, driveLink: assignmentLink }
+      );
+      setEnrollment((p) => ({ ...p, assignments: res.data.assignments }));
+      alert("Assignment submitted!");
+      setAssignmentLink("");
+    } catch (err) {
+      alert("Error submitting assignment", err);
+    }
+  };
 
   if (loading)
     return (
@@ -71,6 +89,20 @@ export default function CoursePlayer() {
         <VideoPlayer
           videoUrl={currentLesson?.videoUrl}
           title={currentLesson?.title}
+        />
+
+        <LessonTabs
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          currentLesson={currentLesson}
+          assignmentLink={assignmentLink}
+          setAssignmentLink={setAssignmentLink}
+          onSubmitAssignment={handleSubmitAssignment}
+          submittedAssignment={
+            enrollment.assignments?.find(
+              (a) => a.lessonIndex === selectedLesson
+            )?.driveLink
+          }
         />
       </div>
     </div>
