@@ -11,12 +11,7 @@ import CoursePlayer from "../pages/Courses/CoursePlayer";
 import AdminLayout from "../Layoutes/AdminLayout";
 import AdminRoute from "./adminRoute/AdminRoute";
 import AdminCourses from "../pages/Admin/AdminCoursesManager";
-import AdminCourseCreate from "../pages/Admin/AdminCourseCreate";
-import AdminCourseEdit from "../pages/Admin/AdminCourseEdit";
-import AdminCourseEnrollments from "../pages/Admin/AdminCourseEnrollments";
-import AdminAssignments from "../pages/Admin/AdminAssignments";
 import AdminDashboard from "../pages/Admin/AdminDashboard";
-import AdminAnalytics from "../pages/Admin/AdminAnalytics";
 
 const router = createBrowserRouter([
   {
@@ -62,6 +57,16 @@ const router = createBrowserRouter([
         </AdminRoute>
       </PrivateRoute>
     ),
+    children: [
+      {
+        index: true,
+        Component: AdminDashboard,
+      },
+      {
+        path: "courses",
+        Component: AdminCourses,
+      },
+    ],
   },
   {
     path: "/login",

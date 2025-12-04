@@ -43,7 +43,7 @@ export default function AdminLayout() {
       {/* Sidebar */}
       <aside
         className={`flex flex-col bg-white border-r border-slate-100 transition-all duration-200 ${
-          collapsed ? "w-20" : "w-64"
+          collapsed ? "w-16" : "w-64"
         }`}
       >
         <div className="h-16 flex items-center px-4 border-b border-slate-100">
@@ -85,7 +85,7 @@ export default function AdminLayout() {
       </aside>
 
       {/* Main */}
-      <main className="flex-1 p-6">
+      <main className="flex-1 px-2 py-6">
         <div className="max-w-full mx-auto relative">
           <button
             onClick={() => setCollapsed((s) => !s)}
