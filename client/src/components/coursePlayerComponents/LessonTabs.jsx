@@ -2,6 +2,7 @@ import { Tab } from "@headlessui/react";
 import { FaFileAlt, FaClipboardList, FaTrophy } from "react-icons/fa";
 import TabOverview from "./Tabs/TabOverview";
 import TabAssignment from "./Tabs/TabAssignment";
+import TabQuiz from "./Tabs/TabQuiz";
 
 const LessonTabs = ({
   currentLesson,
@@ -9,6 +10,10 @@ const LessonTabs = ({
   setAssignmentLink,
   onSubmitAssignment,
   submittedAssignment,
+  quizAnswers,
+  setQuizAnswers,
+  onSubmitQuiz,
+  currentQuizScore,
 }) => {
   const tabs = [
     { id: "overview", icon: FaFileAlt, label: "Overview" },
@@ -57,7 +62,13 @@ const LessonTabs = ({
 
           {/* Quiz */}
           <Tab.Panel>
-            <h2>Quize will be here</h2>
+            <TabQuiz
+              lesson={currentLesson}
+              answers={quizAnswers}
+              setAnswers={setQuizAnswers}
+              onSubmit={onSubmitQuiz}
+              previousScore={currentQuizScore}
+            />
           </Tab.Panel>
         </Tab.Panels>
       </Tab.Group>

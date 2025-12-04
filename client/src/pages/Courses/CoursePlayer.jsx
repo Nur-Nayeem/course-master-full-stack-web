@@ -5,6 +5,9 @@ import useAxios from "../../hooks/useAxios";
 import PlayerHeader from "../../components/coursePlayerComponents/PlayerHeader";
 import VideoPlayer from "../../components/coursePlayerComponents/VideoPlayer";
 import LessonTabs from "../../components/coursePlayerComponents/LessonTabs";
+import ProgressHeader from "../../components/coursePlayerComponents/ProgressHeader";
+import LessonSidebar from "../../components/coursePlayerComponents/LessonSidebar";
+
 export default function CoursePlayer() {
   const { id } = useParams();
   const axiosSecure = useAxiosSecure();
@@ -15,6 +18,8 @@ export default function CoursePlayer() {
   const [selectedLesson, setSelectedLesson] = useState(0);
   const [activeTab, setActiveTab] = useState("overview");
   const [loading, setLoading] = useState(true);
+
+  const [quizAnswers, setQuizAnswers] = useState({});
   const [assignmentLink, setAssignmentLink] = useState("");
 
   useEffect(() => {
@@ -40,6 +45,29 @@ export default function CoursePlayer() {
     };
     fetchData();
   }, [id, axios, axiosSecure]);
+
+  const handleSubmitQuiz = async () => {
+    const lesson = course.lessons[selectedLesson];
+    let score = 0;
+    lesson.quiz.questions.forEach((q, i) => {
+      if (q.options[q.correctAnswer] === quizAnswers[i]) score++;
+    });
+    console.log(score);
+
+    try {
+      const res = await axiosSecure.post(
+        `/api/enrollments/${enrollment._id}/quiz`,
+        { lessonIndex: selectedLesson, score }
+      );
+      console.log(res);
+
+      setEnrollment((p) => ({ ...p, quizScores: res.data.quizScores }));
+      alert(`Quiz submitted! Score: ${score}/${lesson.quiz.questions.length}`);
+      setQuizAnswers({});
+    } catch (err) {
+      alert("Error submitting quiz", err);
+    }
+  };
 
   const handleSubmitAssignment = async () => {
     if (!assignmentLink) return alert("Please provide a link");
@@ -102,6 +130,13 @@ export default function CoursePlayer() {
             enrollment.assignments?.find(
               (a) => a.lessonIndex === selectedLesson
             )?.driveLink
+          }
+          quizAnswers={quizAnswers}
+          setQuizAnswers={setQuizAnswers}
+          onSubmitQuiz={handleSubmitQuiz}
+          currentQuizScore={
+            enrollment.quizScores?.find((q) => q.lessonIndex === selectedLesson)
+              ?.score
           }
         />
       </div>
