@@ -3,9 +3,10 @@ import MainLayoute from "../Layoutes/MainLayoute";
 import Home from "../pages/Home/Home";
 import Login from "../pages/Auth/Login";
 import Register from "../pages/Auth/Register";
-import Dashboard from "../pages/Dashboard/Dashboard";
 import PrivateRoute from "./ProtectedRoutes/PrivateRoute";
 import Courses from "../pages/Courses/Courses";
+import CourseDetailsPage from "../pages/CourseDetails/CourseDetailsPage";
+import StudentDashboard from "../pages/Dashboard/StudentDashboard";
 
 const router = createBrowserRouter([
   {
@@ -21,15 +22,24 @@ const router = createBrowserRouter([
         Component: Courses,
       },
       {
+        path: "/courses/:id",
+        Component: CourseDetailsPage,
+      },
+      {
+        path: "/courses/:id/player",
+        element: <h2>Course Player</h2>,
+      },
+      {
         path: "/dashboard",
         element: (
           <PrivateRoute>
-            <Dashboard />
+            <StudentDashboard />
           </PrivateRoute>
         ),
       },
     ],
   },
+
   {
     path: "/login",
     Component: Login,
