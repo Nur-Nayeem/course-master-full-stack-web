@@ -2,6 +2,7 @@ import { Link } from "react-router";
 import CourseCard from "../../CoursesComponents/CourseCard/CourseCard";
 import { useQuery } from "@tanstack/react-query";
 import useAxios from "../../../hooks/useAxios";
+import LoadingSimple from "../../Loading/LoadingSimple";
 
 const PopulerCourses = () => {
   const axiosInstance = useAxios();
@@ -31,9 +32,7 @@ const PopulerCourses = () => {
           Featured Courses
         </h2>
 
-        {isLoading && (
-          <p className="text-center text-gray-500 py-10">Loading courses...</p>
-        )}
+        {isLoading && <LoadingSimple />}
 
         {isError && (
           <p className="text-center text-red-500 py-10">

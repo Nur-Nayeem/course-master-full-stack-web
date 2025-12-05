@@ -80,11 +80,16 @@ const AllCoursesPage = () => {
               }}
               className="px-4 py-2 rounded-xl w-full border border-primary/50 focus:outline-none focus:ring focus:ring-primary"
             >
-              <option value="">All Categories</option>
+              <option value="">Select Category</option>
+              <option value="Programming">Programming</option>
               <option value="Web Development">Web Development</option>
               <option value="App Development">App Development</option>
               <option value="UI/UX Design">UI/UX Design</option>
-              <option value="Business & Marketing">Business & Marketing</option>
+              <option value="Graphics Design">Graphics Design</option>
+              <option value="Data Science">Data Science</option>
+              <option value="Business and Marketing">
+                Business and Marketing
+              </option>{" "}
             </select>
           </div>
         </div>

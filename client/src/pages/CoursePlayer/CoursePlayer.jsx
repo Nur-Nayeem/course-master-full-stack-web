@@ -83,11 +83,13 @@ export default function CoursePlayer() {
       );
 
       setEnrollment((p) => ({ ...p, quizScores: res.data.quizScores }));
+
       Swal.fire({
-        title: "Error!",
-        text: `Quiz submitted! Score: ${score}/${lesson.quiz.questions.length}`,
-        icon: "error",
-        confirmButtonText: "Cool",
+        position: "center",
+        icon: "success",
+        title: `Quiz submitted! Score: ${score}/${lesson.quiz.questions.length}`,
+        showConfirmButton: false,
+        timer: 1500,
       });
 
       setQuizAnswers({});
@@ -116,19 +118,20 @@ export default function CoursePlayer() {
         { lessonIndex: selectedLesson, driveLink: assignmentLink }
       );
       setEnrollment((p) => ({ ...p, assignments: res.data.assignments }));
+
       Swal.fire({
-        title: "Error!",
-        text: "Assignment submitted!",
-        icon: "error",
-        confirmButtonText: "Cool",
+        position: "center",
+        icon: "success",
+        title: `Assignment submitted!`,
+        showConfirmButton: false,
+        timer: 1500,
       });
 
       setAssignmentLink("");
     } catch (err) {
       Swal.fire({
         title: "Error!",
-        text: "Error submitting assignment",
-        err,
+        text: `Error submitting assignment ${err}`,
         icon: "error",
         confirmButtonText: "Cool",
       });

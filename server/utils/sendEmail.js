@@ -31,7 +31,7 @@ export const sendWelcomeEmail = async (to, name) => {
         </p>
 
         <div style="text-align: center; margin-top: 20px;">
-          <a href="https://yourwebsite.com/dashboard"
+          <a href="https://course-master-nur-nayeem.netlify.app"
              style="background: #4F46E5; padding: 10px 20px; color: #fff; text-decoration: none; border-radius: 6px;">
             Go to Dashboard
           </a>

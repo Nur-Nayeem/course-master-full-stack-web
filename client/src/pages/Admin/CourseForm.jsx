@@ -262,7 +262,6 @@ const LessonList = ({ control, register, errors }) => {
 
 export default function CourseForm({ initialData = null, isEditMode = false }) {
   const [submitting, setSubmitting] = useState(false);
-  const [submitMessage, setSubmitMessage] = useState(null);
   const axiosSecureInstance = useAxiosSecure();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
@@ -395,23 +394,6 @@ export default function CourseForm({ initialData = null, isEditMode = false }) {
           Manage course details, lessons, and embedded quizzes.
         </p>
       </div>
-
-      {submitMessage && (
-        <div
-          className={`mb-6 p-4 rounded-md flex items-center gap-2 ${
-            submitMessage.type === "success"
-              ? "bg-green-50 text-success"
-              : "bg-red-50 text-error"
-          }`}
-        >
-          {submitMessage.type === "success" ? (
-            <CheckCircle size={20} />
-          ) : (
-            <HelpCircle size={20} />
-          )}
-          {submitMessage.text}
-        </div>
-      )}
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
         {/* --- General Information Section --- */}
