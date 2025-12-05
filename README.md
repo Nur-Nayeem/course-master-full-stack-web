@@ -1,6 +1,6 @@
 # Course Master
 
-Course Master is a **MERN stack** web application designed to provide a seamless online learning experience for students and instructors. It allows users to explore courses, enroll, track progress, complete lessons, submit assignments, take quizzes, and for admins to manage courses, enrollments, and analytics.
+Course Master is a full-featured MERN stack online learning platform where users can browse courses, enroll, and learn through structured video lessons. The system allows students to track their progress, complete lessons, take quizzes, and submit assignments, while admins can manage courses, lessons, enrollments, and view analytics. Built with React, Node.js, Express, and MongoDB, it provides a fast, responsive, and secure learning experience with features like JWT authentication, TanStack Query caching, Joi validation, and email notifications via Nodemailer.
 
 ---
 
