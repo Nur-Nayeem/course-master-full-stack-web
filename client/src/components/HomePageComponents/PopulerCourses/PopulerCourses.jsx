@@ -1,58 +1,54 @@
 import { Link } from "react-router";
 import CourseCard from "../../CoursesComponents/CourseCard/CourseCard";
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import useAxios from "../../../hooks/useAxios";
 
 const PopulerCourses = () => {
-  const [courses, setCourses] = useState([]);
-  const axiosInstanse = useAxios();
+  const axiosInstance = useAxios();
+  const limit = 4; // courses per page
 
-  const limit = 8; // courses per page
+  // Fetch top-rated courses using React Query
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["popularCourses", limit], // cache key
+    queryFn: async () => {
+      const res = await axiosInstance.get("/api/courses", {
+        params: {
+          limit,
+          popular: true, // fetch top-rated courses
+        },
+      });
+      return res.data.courses;
+    },
+    staleTime: 1000 * 60 * 5, // cache fresh for 5 minutes
+    cacheTime: 1000 * 60 * 30, // keep in cache for 30 minutes
+    refetchOnWindowFocus: true, // refetch if user focuses tab
+  });
 
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    const fetchCourses = async () => {
-      setLoading(true);
-
-      try {
-        const res = await axiosInstanse.get("/api/courses", {
-          params: {
-            limit,
-          },
-        });
-
-        setCourses(res.data.courses);
-      } catch (err) {
-        console.error(err);
-        alert("Failed to load courses");
-      }
-
-      setLoading(false);
-    };
-    fetchCourses();
-  }, [axiosInstanse]);
   return (
-    <section className="py-16 ">
+    <section className="py-16">
       <div className="container mx-auto px-4">
         <h2 className="text-3xl font-bold text-center text-gray-900 mb-10">
           Featured Courses
         </h2>
 
-        {/* Courses Grid */}
-        {loading && (
+        {isLoading && (
           <p className="text-center text-gray-500 py-10">Loading courses...</p>
         )}
 
-        {!loading && courses.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-            {courses.map((course) => (
+        {isError && (
+          <p className="text-center text-red-500 py-10">
+            Failed to load courses: {error.message}
+          </p>
+        )}
+
+        {!isLoading && data?.length > 0 && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            {data.map((course) => (
               <CourseCard key={course._id} course={course} />
             ))}
           </div>
         )}
 
-        {/* CTA Button */}
         <div className="text-center mt-10">
           <Link to="/courses" className="btn-primary px-4 py-3 font-medium">
             Browse All Courses

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
+import { useNavigate } from "react-router";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   Plus,
   Trash2,
@@ -254,6 +256,8 @@ export default function CourseForm({ initialData = null, isEditMode = false }) {
   const [submitting, setSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState(null);
   const axiosSecureInstance = useAxiosSecure();
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const {
     register,
@@ -272,8 +276,8 @@ export default function CourseForm({ initialData = null, isEditMode = false }) {
       lessons: [],
     },
   });
-  console.log(initialData);
 
+  // ✅ Populate form with initialData when in edit mode
   useEffect(() => {
     if (initialData && isEditMode) {
       const formattedData = {
@@ -281,7 +285,6 @@ export default function CourseForm({ initialData = null, isEditMode = false }) {
         tags: Array.isArray(initialData.tags)
           ? initialData.tags.join(", ")
           : "",
-
         lessons: (initialData.lessons || []).map((lesson) => ({
           ...lesson,
           quiz: {
@@ -301,7 +304,7 @@ export default function CourseForm({ initialData = null, isEditMode = false }) {
     setSubmitting(true);
     setSubmitMessage(null);
 
-    // 1. transform Form Data back to Schema format
+    // Transform form data back to schema format
     const payload = {
       ...data,
       price: Number(data.price),
@@ -321,28 +324,40 @@ export default function CourseForm({ initialData = null, isEditMode = false }) {
       })),
     };
 
-    console.log("Submitting Payload:", payload);
-
-    // 2. Simulate API Call
     try {
-      isEditMode
-        ? await axiosSecureInstance.put(
-            `/api/admin/courses/${initialData._id}`,
-            payload
-          )
-        : await axiosSecureInstance.post(`/api/admin/courses`, payload);
+      if (isEditMode) {
+        await axiosSecureInstance.put(
+          `/api/admin/courses/${initialData._id}`,
+          payload
+        );
+        // Invalidate both the list and single course cache
+        await queryClient.invalidateQueries({ queryKey: ["adminCourses"] });
+        await queryClient.invalidateQueries({
+          queryKey: ["adminCourse", initialData._id],
+        });
+      } else {
+        await axiosSecureInstance.post(`/api/admin/courses`, payload);
+        // Invalidate only the courses list
+        await queryClient.invalidateQueries({ queryKey: ["adminCourses"] });
+      }
 
-      await new Promise((resolve) => setTimeout(resolve, 1500));
       setSubmitMessage({
         type: "success",
         text: isEditMode
           ? "Course updated successfully!"
           : "Course created successfully!",
       });
+
+      // Navigate back after a short delay
+      setTimeout(() => {
+        navigate("/admin/courses");
+      }, 1500);
     } catch (error) {
       setSubmitMessage({
         type: "error",
-        text: `"Something went wrong." ${error}`,
+        text: `Something went wrong: ${
+          error.response?.data?.message || error.message
+        }`,
       });
     } finally {
       setSubmitting(false);

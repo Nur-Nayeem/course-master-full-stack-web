@@ -1,12 +1,11 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { IoSearchSharp } from "react-icons/io5";
 import CourseCard from "../../components/CoursesComponents/CourseCard/CourseCard";
-import useAxios from "../../hooks/useAxios";
 import ListingSceletonLoading from "../../components/CoursesComponents/ListingSceletonLoading";
+import { useQuery } from "@tanstack/react-query";
+import useAxios from "../../hooks/useAxios";
 
 const AllCoursesPage = () => {
-  const [courses, setCourses] = useState([]);
-  const [totalPages, setTotalPages] = useState(1);
   const axiosInstance = useAxios();
 
   // Filters
@@ -18,32 +17,22 @@ const AllCoursesPage = () => {
   const [page, setPage] = useState(1);
   const limit = 12;
 
-  const [loading, setLoading] = useState(false);
+  // Fetch courses using React Query
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["courses", page, search, category, sort],
+    queryFn: async () => {
+      const res = await axiosInstance.get("/api/courses", {
+        params: { page, limit, search, category, sort },
+      });
+      return res.data;
+    },
+    staleTime: 1000 * 60, // 1 minute
+    keepPreviousData: true,
+    refetchOnWindowFocus: true,
+  });
 
-  useEffect(() => {
-    const fetchCourses = async () => {
-      setLoading(true);
-      try {
-        const res = await axiosInstance.get("/api/courses", {
-          params: { page, limit, search, category, sort },
-        });
-
-        // Ensure courses is an array
-        const courseList = Array.isArray(res.data.courses)
-          ? res.data.courses
-          : [];
-
-        setCourses(courseList);
-        setTotalPages(res.data.totalPages || 1);
-      } catch (err) {
-        console.error(err);
-        alert("Failed to load courses");
-      }
-      setLoading(false);
-    };
-
-    fetchCourses();
-  }, [axiosInstance, page, search, category, sort]);
+  const courses = data?.courses || [];
+  const totalPages = data?.totalPages || 1;
 
   return (
     <section className="py-16">
@@ -54,7 +43,6 @@ const AllCoursesPage = () => {
 
         {/* Search + Filters */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-8">
-          {/* Search Input */}
           <label className="flex items-center bg-transparent max-w-md w-full px-4 h-12 rounded-xl border border-gray-300 focus-within:ring focus-within:ring-primary">
             <IoSearchSharp className="text-xl text-gray-500" />
             <input
@@ -69,7 +57,6 @@ const AllCoursesPage = () => {
             />
           </label>
 
-          {/* Filters */}
           <div className="flex flex-col max-w-md w-full md:flex-row items-center gap-4">
             <select
               value={sort}
@@ -102,24 +89,31 @@ const AllCoursesPage = () => {
         </div>
 
         {/* Loading */}
-        {loading && <ListingSceletonLoading />}
+        {isLoading && <ListingSceletonLoading />}
+
+        {/* Error State */}
+        {error && (
+          <p className="text-center text-red-500 py-10">
+            Failed to load courses: {error.message || "Unknown error"}
+          </p>
+        )}
 
         {/* Courses Grid */}
-        {!loading && courses.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            {courses.map((course, idx) => (
-              <CourseCard key={course._id || idx} course={course} />
+        {!isLoading && courses.length > 0 && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            {courses.map((course) => (
+              <CourseCard key={course._id} course={course} />
             ))}
           </div>
         )}
 
         {/* Empty State */}
-        {!loading && courses.length === 0 && (
+        {!isLoading && courses.length === 0 && (
           <p className="text-center text-gray-500 py-10">No courses found.</p>
         )}
 
         {/* Pagination */}
-        {!loading && totalPages > 1 && (
+        {!isLoading && totalPages > 1 && (
           <div className="flex justify-center items-center gap-3 mt-10">
             <button
               onClick={() => setPage((p) => Math.max(1, p - 1))}

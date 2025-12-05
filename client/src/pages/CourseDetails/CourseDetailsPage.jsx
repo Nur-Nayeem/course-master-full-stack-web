@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router";
 import useAxios from "../../hooks/useAxios";
 import {
@@ -12,59 +11,62 @@ import {
 } from "react-icons/fa";
 import { useAuth } from "../../hooks/useAuth";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
+import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 
 const CourseDetailsPage = () => {
   const { id } = useParams();
   const axiosInstance = useAxios();
   const axiosSecureInstance = useAxiosSecure();
   const navigate = useNavigate();
+  const [enrolling, setEnrolling] = useState();
   const { user } = useAuth();
 
-  const [course, setCourse] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [enrolling, setEnrolling] = useState(false);
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["course", id],
+    queryFn: async () => {
+      const res = await axiosInstance.get(`/api/courses/${id}`);
+      return res.data.course;
+    },
+    staleTime: 1000 * 60 * 5, // cache for 5 minutes
+    refetchOnWindowFocus: true, // refetch if window regains focus
+  });
 
-  useEffect(() => {
-    const fetchCourse = async () => {
-      setLoading(true);
-      try {
-        const res = await axiosInstance.get(`/api/courses/${id}`);
-        setCourse(res.data.course);
-      } catch (err) {
-        console.error(err);
-      }
-      setLoading(false);
-    };
-    fetchCourse();
-  }, [axiosInstance, id]);
+  const course = data;
 
   const handleEnroll = async () => {
-    if (!user) {
-      if (!user) {
-        navigate("/login");
-        return;
-      }
-    }
-
     setEnrolling(true);
+    if (!user) {
+      setEnrolling(false);
+      navigate("/login");
+      return;
+    }
 
     try {
       await axiosSecureInstance.post(`/api/enrollments/${id}`);
       alert("Enrollment Successful!");
+      setEnrolling(false);
       navigate(`/courses/${id}/player`);
     } catch (err) {
       alert(err.response?.data?.message || "Failed to enroll");
+      setEnrolling(false);
     }
-
-    setEnrolling(false);
   };
 
-  if (loading)
+  if (isLoading)
     return (
       <div className="flex h-screen items-center justify-center text-gray-500">
         Loading...
       </div>
     );
+
+  if (isError)
+    return (
+      <div className="flex h-screen items-center justify-center text-red-500">
+        Error: {error.message}
+      </div>
+    );
+
   if (!course)
     return (
       <div className="flex h-screen items-center justify-center text-gray-500">

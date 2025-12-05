@@ -1,58 +1,72 @@
-import { useEffect, useState } from "react";
+import React from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 export default function AdminAssignments() {
   const api = useAxiosSecure();
-  const [assignments, setAssignments] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const fetch = async () => {
-    setLoading(true);
-    try {
+  const queryClient = useQueryClient();
+
+  // Fetch assignments
+  const { data: assignments = [], isLoading } = useQuery({
+    queryKey: ["adminAssignments"],
+    queryFn: async () => {
       const res = await api.get("/api/admin/assignments");
-      setAssignments(res.data.assignments || []);
-    } catch (err) {
-      alert("Failed", err);
-    }
-    setLoading(false);
-  };
+      return res.data.assignments || [];
+    },
+    staleTime: 1000 * 60 * 5, // cache 5 minutes
+    refetchOnWindowFocus: false,
+  });
 
-  useEffect(() => {
-    fetch();
-  }, []);
-
-  const review = async (enrollmentId, index) => {
-    const grade = parseInt(prompt("Enter grade (0-100)"));
-    const comment = prompt("Enter comment (optional)");
-    try {
-      await api.post(`/api/admin/assignments/${enrollmentId}/${index}/review`, {
-        grade,
-        reviewerComment: comment,
-      });
-      alert("Reviewed");
-      fetch();
-    } catch (err) {
+  // Review mutation
+  const reviewMutation = useMutation({
+    mutationFn: async ({ enrollmentId, index, grade, comment }) => {
+      return await api.post(
+        `/api/admin/assignments/${enrollmentId}/${index}/review`,
+        { grade, reviewerComment: comment }
+      );
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["adminAssignments"] });
+      alert("Reviewed successfully!");
+    },
+    onError: (err) => {
       alert("Failed to review", err);
+    },
+  });
+
+  const handleReview = (enrollmentId, index) => {
+    const grade = parseInt(prompt("Enter grade (0-100)"));
+    if (isNaN(grade) || grade < 0 || grade > 100) {
+      alert("Invalid grade!");
+      return;
     }
+    const comment = prompt("Enter comment (optional)");
+    reviewMutation.mutate({ enrollmentId, index, grade, comment });
   };
 
   return (
-    <div>
-      <h2 className="text-2xl font-bold mb-4 px-8 py-1">Assignments</h2>
-      <div className="space-y-3">
-        {loading ? (
-          <div className="flex justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary/80"></div>
-          </div>
-        ) : (
-          assignments.map((a, idx) => (
+    <div className="px-8 py-4">
+      <h2 className="text-2xl font-bold mb-4">Assignments</h2>
+
+      {isLoading ? (
+        <div className="flex justify-center items-center h-64">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary/80"></div>
+        </div>
+      ) : assignments.length === 0 ? (
+        <p className="text-gray-500">No assignments found.</p>
+      ) : (
+        <div className="space-y-3">
+          {assignments.map((a, idx) => (
             <div key={idx} className="p-3 bg-white rounded shadow">
               <div className="flex justify-between items-start">
                 <div>
                   <div>
                     <span className="font-semibold">Student Name: </span>
-                    {a.user?.name}
+                    {a.user?.name || "N/A"}
                   </div>
-                  <div className="font-semibold">{a.course?.title}</div>
+                  <div className="font-semibold">
+                    {a.course?.title || "N/A"}
+                  </div>
                   <div className="text-sm text-gray-600">
                     Lesson: {a.lessonIndex}
                   </div>
@@ -76,7 +90,9 @@ export default function AdminAssignments() {
                     {a.reviewed ? `Grade: ${a.grade}` : "Not reviewed"}
                   </div>
                   <button
-                    onClick={() => review(a.enrollmentId, a.assignmentIndex)}
+                    onClick={() =>
+                      handleReview(a.enrollmentId, a.assignmentIndex)
+                    }
                     className="px-3 py-1 border rounded"
                   >
                     Review
@@ -84,9 +100,9 @@ export default function AdminAssignments() {
                 </div>
               </div>
             </div>
-          ))
-        )}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

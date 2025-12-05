@@ -1,37 +1,43 @@
-import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import { Edit2, Trash2 } from "lucide-react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 export default function AdminCourses() {
   const api = useAxiosSecure();
-  const [courses, setCourses] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const queryClient = useQueryClient();
 
-  const fetchCourses = async () => {
-    setLoading(true);
-    try {
+  // Fetch courses
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["adminCourses"],
+    queryFn: async () => {
       const res = await api.get("/api/admin/courses");
-      setCourses(res.data.courses || res.data);
-    } catch (err) {
-      console.error(err);
-    }
-    setLoading(false);
-  };
+      return res.data.courses || res.data;
+    },
+    staleTime: 1000 * 60 * 5, // cache 5 minutes
+    refetchOnWindowFocus: true,
+  });
 
-  useEffect(() => {
-    fetchCourses();
-  }, []);
-
-  const remove = async (id) => {
-    if (!confirm("Are you sure you want to delete this course?")) return;
-    try {
+  // Delete course mutation
+  const deleteMutation = useMutation({
+    mutationFn: async (id) => {
       await api.delete(`/api/admin/courses/${id}`);
-      fetchCourses();
-    } catch (err) {
-      alert(err.response?.data?.message || "Failed to delete");
-    }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["adminCourses"] });
+    },
+  });
+
+  const remove = (id) => {
+    if (!confirm("Are you sure you want to delete this course?")) return;
+    deleteMutation.mutate(id, {
+      onError: (err) => {
+        alert(err.response?.data?.message || "Failed to delete");
+      },
+    });
   };
+
+  const courses = data || [];
 
   return (
     <div>
@@ -51,12 +57,14 @@ export default function AdminCourses() {
         </Link>
       </div>
 
-      {/* New Table UI */}
+      {/* Courses Table */}
       <div className="overflow-x-auto">
-        {loading ? (
+        {isLoading ? (
           <div className="flex justify-center items-center h-64">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary/80"></div>
           </div>
+        ) : isError ? (
+          <div className="text-red-500 text-center py-10">{error.message}</div>
         ) : (
           <table className="w-full text-left text-sm text-slate-700">
             <thead className="bg-slate-100 text-slate-900 font-medium border-b border-slate-200">
@@ -69,11 +77,9 @@ export default function AdminCourses() {
                 <th className="px-6 py-3 text-right">Actions</th>
               </tr>
             </thead>
-
             <tbody className="divide-y divide-slate-100">
               {courses.map((c) => (
                 <tr key={c._id} className="hover:bg-slate-50 transition-colors">
-                  {/* Thumbnail + Title */}
                   <td className="px-6 py-4 flex items-center gap-3">
                     <img
                       src={c.thumbnail || "/placeholder.jpg"}
@@ -84,20 +90,14 @@ export default function AdminCourses() {
                       {c.title}
                     </span>
                   </td>
-
                   <td className="px-6 py-4">{c.category || "N/A"}</td>
-
                   <td className="px-6 py-4">
                     {c.lessons?.length || 0} Lessons
                   </td>
-
                   <td className="px-6 py-4">${c.price}</td>
-
                   <td className="px-6 py-4">
                     {new Date(c.createdAt).toLocaleDateString()}
                   </td>
-
-                  {/* Actions */}
                   <td className="px-6 py-4 text-right flex items-center justify-end gap-3">
                     <Link
                       to={`/admin/courses/edit/${c._id}`}
