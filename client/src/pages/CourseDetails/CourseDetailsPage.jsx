@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router";
+import { useParams, Link, useNavigate } from "react-router";
 import useAxios from "../../hooks/useAxios";
 import {
   FaPlayCircle,
@@ -10,13 +10,19 @@ import {
   FaClock,
   FaCertificate,
 } from "react-icons/fa";
+import { useAuth } from "../../hooks/useAuth";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 const CourseDetailsPage = () => {
   const { id } = useParams();
   const axiosInstance = useAxios();
+  const axiosSecureInstance = useAxiosSecure();
+  const navigate = useNavigate();
+  const { user } = useAuth();
 
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [enrolling, setEnrolling] = useState(false);
 
   useEffect(() => {
     const fetchCourse = async () => {
@@ -32,7 +38,26 @@ const CourseDetailsPage = () => {
     fetchCourse();
   }, [axiosInstance, id]);
 
-  const handleEnroll = () => {};
+  const handleEnroll = async () => {
+    if (!user) {
+      if (!user) {
+        navigate("/login");
+        return;
+      }
+    }
+
+    setEnrolling(true);
+
+    try {
+      await axiosSecureInstance.post(`/api/enrollments/${id}`);
+      alert("Enrollment Successful!");
+      navigate(`/courses/${id}/player`);
+    } catch (err) {
+      alert(err.response?.data?.message || "Failed to enroll");
+    }
+
+    setEnrolling(false);
+  };
 
   if (loading)
     return (
@@ -230,10 +255,11 @@ const CourseDetailsPage = () => {
                 </div>
 
                 <button
+                  disabled={enrolling}
                   onClick={handleEnroll}
-                  className="btn-primary py-3 px-4 w-full"
+                  className="btn-primary py-3 px-4 w-full disabled:opacity-50"
                 >
-                  Enroll Now
+                  {enrolling ? "Enrolling..." : "Enroll Now"}
                 </button>
 
                 <p className="text-center text-xs text-gray-500">

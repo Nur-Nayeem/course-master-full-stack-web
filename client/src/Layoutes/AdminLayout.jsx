@@ -85,7 +85,7 @@ export default function AdminLayout() {
       </aside>
 
       {/* Main */}
-      <main className="flex-1 px-2 py-6">
+      <main className="flex-1 p-2">
         <div className="max-w-full mx-auto relative">
           <button
             onClick={() => setCollapsed((s) => !s)}
