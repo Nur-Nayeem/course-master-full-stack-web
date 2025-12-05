@@ -3,6 +3,9 @@ import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { auth } from "../middleware/auth.js";
+import { sendWelcomeEmail } from "../utils/sendEmail.js";
+import dotenv from "dotenv";
+dotenv.config();
 
 const router = express.Router();
 
@@ -22,6 +25,9 @@ router.post("/register", async (req, res) => {
     const hashed = await bcrypt.hash(password, 10);
 
     const user = await User.create({ name, email, password: hashed });
+
+    // Send Welcome Email (non-blocking)
+    sendWelcomeEmail(email, name);
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "7d",
