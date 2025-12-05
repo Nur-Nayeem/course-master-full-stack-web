@@ -7,7 +7,6 @@ const Navbar = () => {
   const navLinks = [
     { href: "/", label: "Home" },
     { href: "/courses", label: "Courses" },
-    { href: "/contact", label: "Contact" },
   ];
   const { user, logout } = useAuth();
 
@@ -67,9 +66,7 @@ const Navbar = () => {
                   <img
                     className="rounded-full"
                     referrerPolicy="no-referrer"
-                    src={
-                      "https://avatars.githubusercontent.com/u/109820227?v=4"
-                    }
+                    src={"/avater.svg"}
                     alt="profile"
                     height="30"
                     width="30"
