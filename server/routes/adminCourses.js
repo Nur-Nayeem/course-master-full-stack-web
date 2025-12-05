@@ -4,6 +4,8 @@ import Course from "../models/Course.js";
 import Enrollment from "../models/Enrollment.js";
 import { auth } from "../middleware/auth.js";
 import { isAdmin } from "../middleware/isAdmin.js";
+import { validate } from "../middleware/validate.js";
+import { courseValidationSchema } from "../validation/course.validation.js";
 
 const router = express.Router();
 
@@ -33,15 +35,21 @@ router.get("/", auth, isAdmin, async (req, res) => {
 });
 
 // create course
-router.post("/", auth, isAdmin, async (req, res) => {
-  try {
-    const data = req.body;
-    const course = await Course.create(data);
-    res.send({ message: "Created", course });
-  } catch (err) {
-    res.status(500).send({ message: err.message });
+router.post(
+  "/",
+  auth,
+  isAdmin,
+  validate(courseValidationSchema),
+  async (req, res) => {
+    try {
+      const data = req.body;
+      const course = await Course.create(data);
+      res.send({ message: "Created", course });
+    } catch (err) {
+      res.status(500).send({ message: err.message });
+    }
   }
-});
+);
 
 // get single course (admin)
 router.get("/:id", auth, isAdmin, async (req, res) => {

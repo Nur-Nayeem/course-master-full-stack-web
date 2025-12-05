@@ -40,7 +40,7 @@ export default function AdminCourses() {
   const courses = data || [];
 
   return (
-    <div>
+    <div className="container mx-auto">
       {/* Header */}
       <div className="flex justify-between items-center mb-8">
         <div className="ml-8">

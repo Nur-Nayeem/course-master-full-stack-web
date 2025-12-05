@@ -30,9 +30,9 @@ const AdminDashboard = () => {
   }, [axiosSecureInstance]);
 
   return (
-    <section className="space-y-6">
+    <section className="space-y-6 container mx-auto">
       <div className="flex items-center justify-between">
-        <div className="ml-8">
+        <div>
           <h1 className="text-3xl font-bold text-slate-900">Admin Dashboard</h1>
           <p className="text-sm text-slate-500 mt-1">
             Overview of platform activity

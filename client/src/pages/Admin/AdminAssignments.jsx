@@ -45,7 +45,7 @@ export default function AdminAssignments() {
   };
 
   return (
-    <div className="px-8 py-4">
+    <div className="container mx-auto">
       <h2 className="text-2xl font-bold mb-4">Assignments</h2>
 
       {isLoading ? (

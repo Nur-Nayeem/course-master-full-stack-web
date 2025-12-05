@@ -42,7 +42,7 @@ export default function AdminLayout() {
     <div className="min-h-screen flex bg-gray-50">
       {/* Sidebar */}
       <aside
-        className={`flex flex-col bg-white border-r border-slate-100 transition-all duration-200 ${
+        className={`sticky top-2 h-[98vh] z-10 flex flex-col bg-white border-r border-slate-100 transition-all duration-200 ${
           collapsed ? "w-16" : "w-64"
         }`}
       >
@@ -76,6 +76,13 @@ export default function AdminLayout() {
 
         <div className="p-3 border-t border-slate-100">
           <button
+            onClick={() => setCollapsed((s) => !s)}
+            className="my-3 w-full inline-flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-100 text-sm text-secondary/60"
+          >
+            <TbLayoutSidebarLeftCollapse />{" "}
+            {!collapsed && <span>Collapsed</span>}
+          </button>
+          <button
             onClick={logout}
             className="my-3 w-full inline-flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-100 text-sm text-secondary/60"
           >
@@ -85,14 +92,8 @@ export default function AdminLayout() {
       </aside>
 
       {/* Main */}
-      <main className="flex-1 p-2">
-        <div className="max-w-full mx-auto relative">
-          <button
-            onClick={() => setCollapsed((s) => !s)}
-            className="absolute transition top-1 left-0"
-          >
-            <TbLayoutSidebarLeftCollapse className="text-3xl" />
-          </button>
+      <main className="flex-1 p-4">
+        <div className="max-w-full mx-auto">
           <Outlet />
         </div>
       </main>

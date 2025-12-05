@@ -42,7 +42,7 @@ export default function AdminCourseEnrollments() {
   }, [selectedCourse, api]);
 
   return (
-    <div>
+    <div className="container mx-auto">
       <div className="flex justify-between items-center mb-8">
         <div className="ml-8">
           <h2 className="text-2xl font-bold text-secondary">

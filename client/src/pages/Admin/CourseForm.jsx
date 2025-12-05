@@ -166,20 +166,6 @@ const LessonList = ({ control, register, errors }) => {
         <h3 className="text-lg font-medium text-secondary flex items-center gap-2">
           <BookOpen size={20} /> Curriculum
         </h3>
-        <button
-          type="button"
-          onClick={() =>
-            append({
-              title: "",
-              videoUrl: "",
-              duration: "",
-              quiz: { questions: [] },
-            })
-          }
-          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary/90 hover:bg-primary focus:outline-none"
-        >
-          <Plus size={16} className="mr-2" /> Add Lesson
-        </button>
       </div>
 
       {fields.map((item, index) => (
@@ -207,10 +193,17 @@ const LessonList = ({ control, register, errors }) => {
                   Lesson Title
                 </label>
                 <input
-                  {...register(`lessons.${index}.title`, { required: true })}
+                  {...register(`lessons.${index}.title`, {
+                    required: "lassion title is required",
+                  })}
                   className="mt-1 w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-primary outline-none"
                   placeholder="e.g. Introduction to React"
                 />
+                {errors?.lessons?.[index]?.title && (
+                  <p className="text-red-500 text-xs mt-1">
+                    Lesson title is required
+                  </p>
+                )}
               </div>
               <div>
                 <label className="block text-sm font-medium text-secondary/80">
@@ -248,6 +241,20 @@ const LessonList = ({ control, register, errors }) => {
           </div>
         </div>
       ))}
+      <button
+        type="button"
+        onClick={() => {
+          append({
+            title: "",
+            videoUrl: "",
+            duration: "",
+            quiz: { questions: [] },
+          });
+        }}
+        className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary/90 hover:bg-primary focus:outline-none"
+      >
+        <Plus size={16} className="mr-2" /> Add Lesson
+      </button>
     </div>
   );
 };
@@ -275,9 +282,10 @@ export default function CourseForm({ initialData = null, isEditMode = false }) {
       tags: "",
       lessons: [],
     },
+    mode: "onSubmit",
   });
 
-  // ✅ Populate form with initialData when in edit mode
+  //  Populate form with initialData when in edit mode
   useEffect(() => {
     if (initialData && isEditMode) {
       const formattedData = {
@@ -304,40 +312,48 @@ export default function CourseForm({ initialData = null, isEditMode = false }) {
     setSubmitting(true);
     setSubmitMessage(null);
 
-    // Transform form data back to schema format
-    const payload = {
-      ...data,
-      price: Number(data.price),
-      tags: data.tags
-        .split(",")
-        .map((tag) => tag.trim())
-        .filter((tag) => tag !== ""),
-      lessons: data.lessons.map((lesson) => ({
-        ...lesson,
-        quiz: {
-          questions: lesson.quiz.questions.map((q) => ({
-            ...q,
-            correctAnswer: Number(q.correctAnswer),
-            options: q.options.map((opt) => opt.value),
-          })),
-        },
-      })),
-    };
-
     try {
+      console.log(data);
+
+      // Transform form data to match API/Joi schema
+      const payload = {
+        ...data,
+        price: Number(data.price),
+        tags: data.tags
+          ? data.tags
+              .split(",")
+              .map((tag) => tag.trim())
+              .filter((tag) => tag !== "")
+          : [],
+        lessons: data.lessons.map((lesson) => ({
+          ...lesson,
+          quiz:
+            lesson.quiz && lesson.quiz.questions.length > 0
+              ? {
+                  questions: lesson.quiz.questions.map((q) => ({
+                    ...q,
+                    correctAnswer: Number(q.correctAnswer),
+                    options: q.options.map((opt) => opt.value),
+                  })),
+                }
+              : undefined,
+        })),
+      };
+
+      console.log("Payload to send:", payload);
+
+      // API call
       if (isEditMode) {
         await axiosSecureInstance.put(
           `/api/admin/courses/${initialData._id}`,
           payload
         );
-        // Invalidate both the list and single course cache
         await queryClient.invalidateQueries({ queryKey: ["adminCourses"] });
         await queryClient.invalidateQueries({
           queryKey: ["adminCourse", initialData._id],
         });
       } else {
         await axiosSecureInstance.post(`/api/admin/courses`, payload);
-        // Invalidate only the courses list
         await queryClient.invalidateQueries({ queryKey: ["adminCourses"] });
       }
 
@@ -348,26 +364,33 @@ export default function CourseForm({ initialData = null, isEditMode = false }) {
           : "Course created successfully!",
       });
 
-      // Navigate back after a short delay
-      setTimeout(() => {
-        navigate("/admin/courses");
-      }, 1500);
+      // Navigate back after short delay
+      setTimeout(() => navigate("/admin/courses"), 1500);
     } catch (error) {
-      setSubmitMessage({
-        type: "error",
-        text: `Something went wrong: ${
-          error.response?.data?.message || error.message
-        }`,
-      });
+      // Show detailed Joi validation errors if present
+      const errors = error.response?.data?.errors;
+      if (errors && Array.isArray(errors) && errors.length > 0) {
+        setSubmitMessage({
+          type: "error",
+          text: errors.join(", "),
+        });
+      } else {
+        setSubmitMessage({
+          type: "error",
+          text: `Something went wrong: ${
+            error.response?.data?.message || error.message
+          }`,
+        });
+      }
     } finally {
       setSubmitting(false);
     }
   };
 
   return (
-    <div className="max-w-5xl mx-auto px-8">
+    <div className="container mx-auto px-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">
+        <h1 className="text-3xl font-bold text-secondary">
           {isEditMode ? "Edit Course" : "Create New Course"}
         </h1>
         <p className="text-gray-500 mt-2">
@@ -428,6 +451,11 @@ export default function CourseForm({ initialData = null, isEditMode = false }) {
                 className="mt-1 block w-full p-2.5 border border-gray-300 rounded-md focus:ring-primary focus:border-primary"
                 placeholder="Enter a detailed description of the course..."
               />
+              {errors.description && (
+                <span className="text-red-500 text-xs">
+                  {errors.description.message}
+                </span>
+              )}
             </div>
 
             <div>
@@ -438,6 +466,11 @@ export default function CourseForm({ initialData = null, isEditMode = false }) {
                 {...register("instructor", { required: true })}
                 className="mt-1 block w-full p-2.5 border border-gray-300 rounded-md focus:ring-primary focus:border-primary"
               />
+              {errors.instructor && (
+                <span className="text-red-500 text-xs">
+                  {errors.instructor.message}
+                </span>
+              )}
             </div>
 
             <div>
@@ -457,7 +490,7 @@ export default function CourseForm({ initialData = null, isEditMode = false }) {
                 Category
               </label>
               <select
-                {...register("category", { required: true })}
+                {...register("category", { required: "Category is required" })}
                 className="mt-1 block w-full p-2.5 border border-gray-300 rounded-md focus:ring-primary focus:border-primary"
               >
                 <option value="">Select Category</option>
@@ -471,6 +504,11 @@ export default function CourseForm({ initialData = null, isEditMode = false }) {
                   Business and Marketing
                 </option>
               </select>
+              {errors.category && (
+                <span className="text-red-500 text-xs">
+                  {errors.category.message}
+                </span>
+              )}
             </div>
 
             <div>
@@ -489,10 +527,17 @@ export default function CourseForm({ initialData = null, isEditMode = false }) {
                 Thumbnail URL
               </label>
               <input
-                {...register("thumbnail")}
+                {...register("thumbnail", {
+                  required: "thumbnail is required",
+                })}
                 className="mt-1 block w-full p-2.5 border border-gray-300 rounded-md focus:ring-primary focus:border-primary"
                 placeholder="https://example.com/image.jpg"
               />
+              {errors.thumbnail && (
+                <span className="text-red-500 text-xs">
+                  {errors.thumbnail.message}
+                </span>
+              )}
             </div>
           </div>
         </div>
