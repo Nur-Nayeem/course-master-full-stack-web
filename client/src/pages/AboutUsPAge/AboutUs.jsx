@@ -20,8 +20,8 @@ const AboutUs = () => {
       <div className="container w-full bg-white shadow-sm rounded-xl overflow-hidden">
         {/* Header Section - Updated to use primary color */}
         <header className="p-8 md:p-12 bg-primary text-white text-center rounded-t-xl">
-          <h1 className="text-4xl sm:text-5xl font-extrabold mb-3 flex items-center justify-center space-x-3">
-            <FaLaptopCode className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
+          <h1 className="text-3xl sm:text-5xl font-extrabold mb-3 flex items-center justify-center space-x-3">
+            <FaLaptopCode className="text-5xl hidden md:block text-white" />
             {/* <BookOpen className="w-8 h-8 sm:w-10 sm:h-10 text-yellow-300" /> */}
             <span>About Course Master</span>
           </h1>
