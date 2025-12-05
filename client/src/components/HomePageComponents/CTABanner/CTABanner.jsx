@@ -1,7 +1,9 @@
 import React from "react";
 import { Link } from "react-router";
+import { useAuth } from "../../../hooks/useAuth";
 
 const CtaBanner = () => {
+  const { user } = useAuth();
   return (
     <section className="py-16">
       <div className="container mx-auto">
@@ -15,12 +17,21 @@ const CtaBanner = () => {
               career. Your future self will thank you.
             </p>
             <div className="mt-8 flex justify-center">
-              <Link
-                to="/register"
-                className="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-white text-primary text-base font-bold transition-transform duration-300 hover:scale-102"
-              >
-                Sign up for free
-              </Link>
+              {user ? (
+                <Link
+                  to="/courses"
+                  className="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-white text-primary text-base font-bold transition-transform duration-300 hover:scale-102"
+                >
+                  Explore Now
+                </Link>
+              ) : (
+                <Link
+                  to="/register"
+                  className="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-white text-primary text-base font-bold transition-transform duration-300 hover:scale-102"
+                >
+                  Sign up for free
+                </Link>
+              )}
             </div>
           </div>
         </div>

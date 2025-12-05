@@ -7,6 +7,7 @@ const Navbar = () => {
   const navLinks = [
     { href: "/", label: "Home" },
     { href: "/courses", label: "Courses" },
+    { href: "/about-us", label: "About Us" },
   ];
   const { user, logout } = useAuth();
 
@@ -60,6 +61,9 @@ const Navbar = () => {
                 role="button"
                 className="py-1 md:px-2 border border-neutral-200 flex flex-row items-center gap-3 rounded-full cursor-pointer hover:shadow-md transition"
               >
+                <span className="pl-2.5">
+                  {user.role === "admin" ? "Admin" : user.name}
+                </span>
                 <AiOutlineMenu className="hidden lg:block" />
                 <div className="">
                   {/* Avatar */}

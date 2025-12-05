@@ -94,7 +94,7 @@ const Footer = () => {
             Get the latest courses & updates in your inbox.
           </p>
 
-          <div className="flex items-center bg-secondary rounded-xl overflow-hidden">
+          <div className="flex items-center bg-gray-600 rounded-xl overflow-hidden">
             <input
               type="email"
               placeholder="Enter your email"

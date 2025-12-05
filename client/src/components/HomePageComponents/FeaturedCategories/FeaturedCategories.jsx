@@ -1,4 +1,7 @@
+import { use } from "react";
 import { FaCode, FaPaintBrush, FaMobileAlt, FaChartLine } from "react-icons/fa";
+import { QueryContext } from "../../../context/Contexts";
+import { useNavigate } from "react-router";
 
 const FeaturedCategories = () => {
   const categories = [
@@ -11,14 +14,17 @@ const FeaturedCategories = () => {
       icon: <FaMobileAlt className="text-3xl text-primary" />,
     },
     {
-      name: "Design & UI/UX",
+      name: "UI/UX Design",
       icon: <FaPaintBrush className="text-3xl text-primary" />,
     },
     {
-      name: "Business & Marketing",
+      name: "Business and Marketing",
       icon: <FaChartLine className="text-3xl text-primary" />,
     },
   ];
+
+  const { setCategory } = use(QueryContext);
+  const navigate = useNavigate();
 
   return (
     <section className="py-16">
@@ -32,6 +38,10 @@ const FeaturedCategories = () => {
             <div
               key={cat.name}
               className="bg-white rounded-xl shadow hover:shadow-md transition-all p-6 flex flex-col items-center gap-3 cursor-pointer hover:-translate-y-1"
+              onClick={() => {
+                setCategory(cat.name);
+                navigate("/courses");
+              }}
             >
               {cat.icon}
               <span className="text-gray-800 font-semibold text-lg">

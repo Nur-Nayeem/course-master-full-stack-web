@@ -1,10 +1,13 @@
 // HeroSection.jsx
 import { Link } from "react-router";
 import { FaSearch } from "react-icons/fa";
+import { use } from "react";
+import { QueryContext } from "../../../context/Contexts";
 
 export default function HeroSection() {
+  const { setSearch } = use(QueryContext);
   return (
-    <section className="w-full bg-linear-to-r from-primary/10 to-primary/5 py-20">
+    <section className="w-full bg-linear-to-r from-primary/10 to-primary/5 py-16">
       <div className="container mx-auto px-4 flex flex-col lg:flex-row items-center gap-10">
         {/* Left Text Section */}
         <div className="flex-1 space-y-6">
@@ -26,6 +29,7 @@ export default function HeroSection() {
               type="text"
               placeholder="Search courses..."
               className="flex-1 ml-3 outline-none text-gray-700"
+              onChange={(e) => setSearch(e.target.value)}
             />
           </div>
 

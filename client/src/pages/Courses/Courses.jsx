@@ -1,16 +1,16 @@
-import { useState } from "react";
+import { use, useState } from "react";
 import { IoSearchSharp } from "react-icons/io5";
 import CourseCard from "../../components/CoursesComponents/CourseCard/CourseCard";
 import ListingSceletonLoading from "../../components/CoursesComponents/ListingSceletonLoading";
 import { useQuery } from "@tanstack/react-query";
 import useAxios from "../../hooks/useAxios";
+import { QueryContext } from "../../context/Contexts";
 
 const AllCoursesPage = () => {
   const axiosInstance = useAxios();
+  const { search, setSearch, category, setCategory } = use(QueryContext);
 
   // Filters
-  const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("");
   const [sort, setSort] = useState("");
 
   // Pagination
@@ -43,7 +43,7 @@ const AllCoursesPage = () => {
 
         {/* Search + Filters */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-8">
-          <label className="flex items-center bg-transparent max-w-md w-full px-4 h-12 rounded-xl border border-gray-300 focus-within:ring focus-within:ring-primary">
+          <label className="flex items-center bg-transparent max-w-md w-full px-4 h-12 rounded-xl border border-primary/50 focus-within:ring focus-within:ring-primary">
             <IoSearchSharp className="text-xl text-gray-500" />
             <input
               type="search"
@@ -64,7 +64,7 @@ const AllCoursesPage = () => {
                 setSort(e.target.value);
                 setPage(1);
               }}
-              className="px-4 py-2 rounded-xl w-full border border-gray-300 focus:outline-none focus:ring focus:ring-primary"
+              className="px-4 py-2 rounded-xl w-full border border-primary/50 focus:outline-none focus:ring focus:ring-primary"
             >
               <option value="">Sort By</option>
               <option value="price_asc">Price: Low → High</option>
@@ -77,7 +77,7 @@ const AllCoursesPage = () => {
                 setCategory(e.target.value);
                 setPage(1);
               }}
-              className="px-4 py-2 rounded-xl w-full border border-gray-300 focus:outline-none focus:ring focus:ring-primary"
+              className="px-4 py-2 rounded-xl w-full border border-primary/50 focus:outline-none focus:ring focus:ring-primary"
             >
               <option value="">All Categories</option>
               <option value="Web Development">Web Development</option>
@@ -118,7 +118,7 @@ const AllCoursesPage = () => {
             <button
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={page === 1}
-              className="px-4 py-2 rounded-xl border border-gray-300 hover:bg-gray-100 disabled:opacity-50"
+              className="px-4 py-2 rounded-xl border border-primary/60 hover:bg-gray-100 disabled:opacity-50"
             >
               Previous
             </button>
@@ -130,7 +130,7 @@ const AllCoursesPage = () => {
             <button
               onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
               disabled={page === totalPages}
-              className="px-4 py-2 rounded-xl border border-gray-300 hover:bg-gray-100 disabled:opacity-50"
+              className="px-4 py-2 rounded-xl border border-primary/60 hover:bg-gray-100 disabled:opacity-50"
             >
               Next
             </button>

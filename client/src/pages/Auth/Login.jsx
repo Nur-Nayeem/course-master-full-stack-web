@@ -61,7 +61,7 @@ export default function Login() {
                 <div>
                   <p className="text-sm font-medium pb-2">Email</p>
                   <div className="relative">
-                    <MdOutlineEmail className="absolute left-3 top-3 text-gray-500" />
+                    <MdOutlineEmail className="absolute left-3 top-4 text-gray-500" />
                     <input
                       {...register("email", { required: "Email required" })}
                       type="email"
@@ -79,7 +79,7 @@ export default function Login() {
                 <div>
                   <p className="text-sm font-medium pb-2">Password</p>
                   <div className="relative">
-                    <BiLock className="absolute left-3 top-3 text-gray-500" />
+                    <BiLock className="absolute left-3 top-4 text-gray-500" />
                     <input
                       {...register("password", {
                         required: "Password required",
