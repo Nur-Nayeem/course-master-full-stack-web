@@ -16,6 +16,7 @@ import AdminCourseEdit from "../pages/Admin/AdminCourseEdit";
 import AdminDashboard from "../pages/Admin/AdminDashboard";
 import AdminCourseEnrollments from "../pages/Admin/AdminCourseEnrollments";
 import AdminAssignments from "../pages/Admin/AdminAssignments";
+import AboutUs from "../pages/AboutUsPAge/AboutUs";
 
 const router = createBrowserRouter([
   {
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
       {
         path: "/courses",
         Component: Courses,
+      },
+      {
+        path: "/about-us",
+        Component: AboutUs,
       },
       {
         path: "/courses/:id",
