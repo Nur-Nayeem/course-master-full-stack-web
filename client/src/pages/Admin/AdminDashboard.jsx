@@ -31,6 +31,7 @@ const AdminDashboard = () => {
 
   return (
     <section className="space-y-6 container mx-auto">
+      <title>Admin DashBoard</title>
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-slate-900">Admin Dashboard</h1>

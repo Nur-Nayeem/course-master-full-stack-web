@@ -36,6 +36,7 @@ const AllCoursesPage = () => {
 
   return (
     <section className="py-16">
+      <title>All Courses</title>
       <div className="container mx-auto px-4">
         <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">
           All Courses

@@ -89,6 +89,7 @@ const CourseDetailsPage = () => {
 
   return (
     <div className="bg-white min-h-screen font-sans text-secondary">
+      <title>{course.title}</title>
       <div className="bg-gray-800 text-white py-12 px-4 lg:py-16">
         <div className="container mx-auto max-w-6xl relative z-10">
           <div className="lg:w-2/3 space-y-4">

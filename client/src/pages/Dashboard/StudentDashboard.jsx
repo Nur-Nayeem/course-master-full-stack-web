@@ -35,6 +35,7 @@ const StudentDashboard = () => {
 
   return (
     <section className="min-h-screen bg-gray-50/50 py-12">
+      <title>Student Dashboard</title>
       <div className="container mx-auto px-4 md:px-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-secondary">Dashboard</h1>

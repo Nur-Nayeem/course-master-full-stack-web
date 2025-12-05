@@ -51,6 +51,7 @@ export default function Register() {
 
   return (
     <div className="flex h-full grow flex-col py-16">
+      <title>Course Master- Register</title>
       <div className="flex flex-1 items-center justify-center p-4 lg:p-8">
         <div className="flex w-full max-w-6xl overflow-hidden rounded-xl bg-white shadow-xl">
           <div className="hidden w-1/2 lg:flex items-center justify-center p-12">
@@ -147,10 +148,6 @@ export default function Register() {
                 <span className="text-gray-400">OR</span>
                 <hr className="flex-1" />
               </div>
-
-              <button className="w-full border py-3 rounded-lg flex items-center justify-center gap-3">
-                <FcGoogle /> Continue with Google
-              </button>
 
               <p className="text-center mt-4 text-sm">
                 Already have an account?

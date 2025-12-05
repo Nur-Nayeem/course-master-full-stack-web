@@ -7,6 +7,7 @@ import CtaBanner from "../../components/HomePageComponents/CTABanner/CTABanner";
 const Home = () => {
   return (
     <div>
+      <title>Course Master - Home</title>
       {/* <Banner /> */}
       <HeroSection />
       <FeaturedCategories />

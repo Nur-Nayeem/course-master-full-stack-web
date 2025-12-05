@@ -17,6 +17,7 @@ import { Link } from "react-router";
 const AboutUs = () => {
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4 sm:p-8">
+      <title>Course Master- About</title>
       <div className="container w-full bg-white shadow-sm rounded-xl overflow-hidden">
         {/* Header Section - Updated to use primary color */}
         <header className="p-8 md:p-12 bg-primary text-white text-center rounded-t-xl">
