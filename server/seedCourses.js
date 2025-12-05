@@ -7,136 +7,109 @@ import Course from "./models/Course.js";
 mongoose.connect(process.env.MONGODB_URI).then(async () => {
   await Course.insertMany([
     {
-      title: "Flutter App Development Masterclass",
-      instructor: "Kevin Parker",
+      title: "Full-Stack Web Development Bootcamp 2025",
+      slug: "full-stack-web-dev-2025",
       description:
-        "Build beautiful cross-platform mobile apps using Flutter and Dart with real-world projects.",
-      syllabus: ["Dart Basics", "Widgets", "State Management", "Firebase"],
-      price: 64,
-      category: "App Development",
-      tags: ["flutter", "dart"],
-      thumbnail: "https://placehold.co/600x400",
-    },
-    {
-      title: "Django REST Framework API Development",
-      instructor: "Zara Sheikh",
-      description:
-        "Create scalable backend APIs using Django REST Framework with authentication and deployment.",
-      syllabus: ["Django", "DRF", "JWT Auth", "Deployment"],
-      price: 55,
-      category: "Backend",
-      tags: ["django", "api", "backend"],
-      thumbnail: "https://placehold.co/600x400",
-    },
-    {
-      title: "SQL & Database Design",
-      instructor: "William Scott",
-      description:
-        "Master SQL queries, joins, normalization, indexing, and relational database design.",
-      syllabus: ["MySQL", "Queries", "Normalization", "Joins"],
-      price: 37,
-      category: "Database",
-      tags: ["sql", "database"],
-      thumbnail: "https://placehold.co/600x400",
-    },
-    {
-      title: "Blockchain Development with Solidity",
-      instructor: "Haruki Tanaka",
-      description:
-        "Learn blockchain concepts, Ethereum, and smart contract development using Solidity.",
-      syllabus: ["Solidity", "Smart Contracts", "Web3.js", "Metamask"],
-      price: 99,
-      category: "Blockchain",
-      tags: ["solidity", "web3"],
-      thumbnail: "https://placehold.co/600x400",
-    },
-    {
-      title: "3D Modeling with Blender",
-      instructor: "Aria Lopez",
-      description:
-        "Learn 3D modeling, sculpting, lighting, animation, and rendering with Blender.",
-      syllabus: ["Modeling", "Sculpting", "Animation", "Rendering"],
-      price: 40,
-      category: "Design",
-      tags: ["blender", "3d"],
-      thumbnail: "https://placehold.co/600x400",
-    },
-    {
-      title: "R Programming for Data Analysis",
-      instructor: "Victor Hughes",
-      description:
-        "Analyze datasets, visualize trends, and perform statistical modeling using R.",
-      syllabus: ["R Basics", "Visualization", "Statistics", "Data Analysis"],
-      price: 44,
-      category: "Data Science",
-      tags: ["r", "statistics"],
-      thumbnail: "https://placehold.co/600x400",
-    },
-    {
-      title: "Android Development with Kotlin",
-      instructor: "Priya Sharma",
-      description:
-        "Learn modern Android development using Kotlin, Jetpack Compose, and MVVM.",
-      syllabus: ["Kotlin", "Compose", "MVVM", "APIs"],
-      price: 67,
-      category: "App Development",
-      tags: ["kotlin", "android"],
-      thumbnail: "https://placehold.co/600x400",
-    },
-    {
-      title: "C++ Programming & Algorithms",
-      instructor: "Alexander Griffin",
-      description:
-        "Master C++ fundamentals, STL, data structures, algorithms, and problem solving.",
-      syllabus: ["Basics", "STL", "DSA", "Projects"],
-      price: 50,
-      category: "Programming",
-      tags: ["cpp", "dsa"],
-      thumbnail: "https://placehold.co/600x400",
-    },
-    {
-      title: "WordPress for Beginners",
-      instructor: "Isabella Reed",
-      description:
-        "Learn to create websites, blogs, and eCommerce stores without coding.",
-      syllabus: ["Themes", "Plugins", "SEO", "eCommerce"],
-      price: 32,
+        "Master HTML, CSS, JavaScript, React, Node.js, MongoDB, and build full-stack projects.",
+      instructor: {
+        name: "Mr. James Carter",
+        role: "Senior Software Engineer",
+        about: "8+ years of experience in full-stack development.",
+        avatar: "https://i.ibb.co/8j5pPKR/teacher1.png",
+      },
+      thumbnail: "https://i.ibb.co/SffbS2C/course1.png",
+      price: 79.99,
+      oldPrice: 129.99,
+      rating: 4.8,
+      studentsCount: 15200,
       category: "Web Development",
-      tags: ["wordpress", "cms"],
-      thumbnail: "https://placehold.co/600x400",
+      tags: ["HTML", "CSS", "JavaScript", "React", "Node.js"],
+      content: [
+        {
+          title: "Introduction to Web Development",
+          lessons: [
+            { title: "What is Web Development?", duration: "08:15" },
+            { title: "Frontend vs Backend", duration: "10:00" },
+          ],
+        },
+        {
+          title: "React Fundamentals",
+          lessons: [
+            { title: "React Components", duration: "12:30" },
+            { title: "Props & State", duration: "14:10" },
+          ],
+        },
+      ],
     },
     {
-      title: "Big Data with Hadoop & Spark",
-      instructor: "Ethan Collins",
+      title: "UI/UX Design Mastery 2025",
+      slug: "ui-ux-design-2025",
       description:
-        "Learn big data processing, distributed systems, Hadoop ecosystem, and Apache Spark.",
-      syllabus: ["Hadoop", "HDFS", "MapReduce", "Spark"],
-      price: 88,
+        "Learn UI/UX from fundamentals to advanced tools like Figma, prototyping, and usability testing.",
+      instructor: {
+        name: "Sarah Mitchell",
+        role: "UX Designer",
+        about: "Worked with 15+ global brands as a lead designer.",
+        avatar: "https://i.ibb.co/tH8Q2L8/teacher2.png",
+      },
+      thumbnail: "https://i.ibb.co/C6fBdDr/course2.png",
+      price: 59.99,
+      oldPrice: 109.99,
+      rating: 4.7,
+      studentsCount: 9800,
+      category: "UI/UX Design",
+      tags: ["Figma", "Prototyping", "Design Thinking", "Wireframes"],
+      content: [
+        {
+          title: "Introduction to UI/UX",
+          lessons: [
+            { title: "What is UI/UX?", duration: "07:40" },
+            { title: "Design Thinking Process", duration: "11:20" },
+          ],
+        },
+        {
+          title: "Figma Basics",
+          lessons: [
+            { title: "Frames & Layouts", duration: "15:10" },
+            { title: "Color & Typography", duration: "09:55" },
+          ],
+        },
+      ],
+    },
+    {
+      title: "Python for Data Science & Machine Learning",
+      slug: "python-data-science-2025",
+      description:
+        "Learn NumPy, Pandas, Matplotlib, and machine learning basics using Python.",
+      instructor: {
+        name: "Dr. Angela Yu",
+        role: "Data Scientist",
+        about: "15+ years in data analytics and ML.",
+        avatar: "https://i.ibb.co/XbXP3rL/teacher3.png",
+      },
+      thumbnail: "https://i.ibb.co/ZM5XZ1y/course3.png",
+      price: 84.99,
+      oldPrice: 129.99,
+      rating: 4.9,
+      studentsCount: 50400,
       category: "Data Science",
-      tags: ["bigdata", "spark"],
-      thumbnail: "https://placehold.co/600x400",
-    },
-    {
-      title: "Project Management with Agile & Scrum",
-      instructor: "Natalie Moore",
-      description:
-        "Understand Agile workflow, Scrum framework, sprint planning, and team management.",
-      syllabus: ["Agile", "Scrum", "Sprints", "Team Management"],
-      price: 41,
-      category: "Management",
-      tags: ["agile", "scrum"],
-      thumbnail: "https://placehold.co/600x400",
-    },
-    {
-      title: "Excel for Data Analytics",
-      instructor: "Marcus Allen",
-      description:
-        "Learn advanced Excel functions, pivot tables, dashboards, and data analytics skills.",
-      syllabus: ["Formulas", "Pivot Tables", "Charts", "Dashboards"],
-      price: 28,
-      category: "Data Analytics",
-      tags: ["excel", "analytics"],
-      thumbnail: "https://placehold.co/600x400",
+      tags: ["Python", "NumPy", "Pandas", "Machine Learning"],
+      content: [
+        {
+          title: "Python Basics",
+          lessons: [
+            { title: "Variables & Types", duration: "10:20" },
+            { title: "Loops & Conditions", duration: "14:00" },
+          ],
+        },
+        {
+          title: "Data Analysis",
+          lessons: [
+            { title: "Working with Pandas", duration: "16:10" },
+            { title: "Cleaning Data", duration: "12:50" },
+          ],
+        },
+      ],
     },
   ]);
 

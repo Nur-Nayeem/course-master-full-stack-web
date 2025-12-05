@@ -6,8 +6,6 @@ dotenv.config();
 import authRoutes from "./routes/auth.js";
 import courseRoutes from "./routes/courseRoutes.js";
 import enrollRoutes from "./routes/enrollRoutes.js";
-
-import adminAuthRoutes from "./routes/adminAuth.js";
 import adminCoursesRoutes from "./routes/adminCourses.js";
 import adminEnrollmentsRoutes from "./routes/adminEnrollments.js";
 import adminAssignmentsRoutes from "./routes/adminAssignments.js";
@@ -31,7 +29,6 @@ app.use("/api/courses", courseRoutes);
 app.use("/api/enrollments", enrollRoutes);
 
 app.use("/api/admin", adminStatsRoutes);
-app.use("/api/admin/auth", adminAuthRoutes);
 app.use("/api/admin/courses", adminCoursesRoutes);
 app.use("/api/admin/enrollments", adminEnrollmentsRoutes);
 app.use("/api/admin/assignments", adminAssignmentsRoutes);

@@ -447,9 +447,14 @@ export default function CourseForm({ initialData = null, isEditMode = false }) {
               >
                 <option value="">Select Category</option>
                 <option value="Programming">Programming</option>
-                <option value="Design">Design</option>
-                <option value="Marketing">Marketing</option>
-                <option value="Business">Business</option>
+                <option value="Web Development">Web Development</option>
+                <option value="App Development">App Development</option>
+                <option value="UI/UX Design">UI/UX Design</option>
+                <option value="Graphics Design">Graphics Design</option>
+                <option value="Data Science">Data Science</option>
+                <option value="Business and Marketing">
+                  Business and Marketing
+                </option>
               </select>
             </div>
 
