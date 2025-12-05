@@ -7,7 +7,8 @@ import VideoPlayer from "../../components/coursePlayerComponents/VideoPlayer";
 import LessonTabs from "../../components/coursePlayerComponents/LessonTabs";
 import ProgressHeader from "../../components/coursePlayerComponents/ProgressHeader";
 import LessonSidebar from "../../components/coursePlayerComponents/LessonSidebar";
-
+import LoadingSimple from "../../components/Loading/LoadingSimple";
+import Swal from "sweetalert2";
 export default function CoursePlayer() {
   const { id } = useParams();
   const axiosSecure = useAxiosSecure();
@@ -59,7 +60,12 @@ export default function CoursePlayer() {
         lessonsCompleted: res.data.lessonsCompleted,
       }));
     } catch (err) {
-      alert(err.response?.data?.message || "Error marking complete");
+      Swal.fire({
+        title: "Error!",
+        text: err.response?.data?.message || "Error marking complete",
+        icon: "error",
+        confirmButtonText: "Cool",
+      });
     }
   };
 
@@ -69,44 +75,67 @@ export default function CoursePlayer() {
     lesson.quiz.questions.forEach((q, i) => {
       if (q.options[q.correctAnswer] === quizAnswers[i]) score++;
     });
-    console.log(score);
 
     try {
       const res = await axiosSecure.post(
         `/api/enrollments/${enrollment._id}/quiz`,
         { lessonIndex: selectedLesson, score }
       );
-      console.log(res);
 
       setEnrollment((p) => ({ ...p, quizScores: res.data.quizScores }));
-      alert(`Quiz submitted! Score: ${score}/${lesson.quiz.questions.length}`);
+      Swal.fire({
+        title: "Error!",
+        text: `Quiz submitted! Score: ${score}/${lesson.quiz.questions.length}`,
+        icon: "error",
+        confirmButtonText: "Cool",
+      });
+
       setQuizAnswers({});
     } catch (err) {
-      alert("Error submitting quiz", err);
+      Swal.fire({
+        title: "Error!",
+        text: "Error submitting quiz",
+        err,
+        icon: "error",
+        confirmButtonText: "Cool",
+      });
     }
   };
 
   const handleSubmitAssignment = async () => {
-    if (!assignmentLink) return alert("Please provide a link");
+    if (!assignmentLink)
+      return Swal.fire({
+        title: "Error!",
+        text: "Please provide a link",
+        icon: "error",
+        confirmButtonText: "Cool",
+      });
     try {
       const res = await axiosSecure.post(
         `/api/enrollments/${enrollment._id}/assignment`,
         { lessonIndex: selectedLesson, driveLink: assignmentLink }
       );
       setEnrollment((p) => ({ ...p, assignments: res.data.assignments }));
-      alert("Assignment submitted!");
+      Swal.fire({
+        title: "Error!",
+        text: "Assignment submitted!",
+        icon: "error",
+        confirmButtonText: "Cool",
+      });
+
       setAssignmentLink("");
     } catch (err) {
-      alert("Error submitting assignment", err);
+      Swal.fire({
+        title: "Error!",
+        text: "Error submitting assignment",
+        err,
+        icon: "error",
+        confirmButtonText: "Cool",
+      });
     }
   };
 
-  if (loading)
-    return (
-      <div className="flex h-screen items-center justify-center bg-gray-900 text-white">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary/80" />
-      </div>
-    );
+  if (loading) return <LoadingSimple />;
 
   if (!enrollment)
     return (
@@ -124,7 +153,6 @@ export default function CoursePlayer() {
 
   const currentLesson = course.lessons[selectedLesson];
   const isCompleted = enrollment.lessonsCompleted?.includes(selectedLesson);
-  console.log(currentLesson?.videoUrl);
 
   return (
     <div className="container mx-auto flex flex-col lg:flex-row bg-gray-50 overflow-hidden">

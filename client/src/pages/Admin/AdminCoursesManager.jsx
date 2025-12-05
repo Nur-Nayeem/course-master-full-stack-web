@@ -2,6 +2,7 @@ import { Link } from "react-router";
 import { Edit2, Trash2 } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
+import Swal from "sweetalert2";
 
 export default function AdminCourses() {
   const api = useAxiosSecure();
@@ -14,7 +15,7 @@ export default function AdminCourses() {
       const res = await api.get("/api/admin/courses");
       return res.data.courses || res.data;
     },
-    staleTime: 1000 * 60 * 5, // cache 5 minutes
+    staleTime: 1000 * 60 * 30, // cache 30 minutes
     refetchOnWindowFocus: true,
   });
 
@@ -29,11 +30,35 @@ export default function AdminCourses() {
   });
 
   const remove = (id) => {
-    if (!confirm("Are you sure you want to delete this course?")) return;
-    deleteMutation.mutate(id, {
-      onError: (err) => {
-        alert(err.response?.data?.message || "Failed to delete");
-      },
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteMutation.mutate(id, {
+          onSuccess: () => {
+            Swal.fire({
+              title: "Deleted!",
+              text: "The course has been deleted.",
+              icon: "success",
+              timer: 1500,
+              showConfirmButton: false,
+            });
+          },
+          onError: (err) => {
+            Swal.fire({
+              title: "Error!",
+              text: err.response?.data?.message || "Failed to delete",
+              icon: "error",
+            });
+          },
+        });
+      }
     });
   };
 

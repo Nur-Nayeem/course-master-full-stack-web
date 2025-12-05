@@ -7,6 +7,7 @@ import { FcGoogle } from "react-icons/fc";
 import { Link, useNavigate } from "react-router";
 import useAxios from "../../hooks/useAxios";
 import { useAuth } from "../../hooks/useAuth";
+import Swal from "sweetalert2";
 
 export default function Login() {
   const [showPass, setShowPass] = useState(false);
@@ -26,11 +27,24 @@ export default function Login() {
       const res = await axiosInstance.post("/api/auth/login", data);
 
       login(res.data.user, res.data.token);
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Login successfull!",
+        showConfirmButton: false,
+        timer: 1500,
+      });
       setLoading(false);
 
       navigate("/");
     } catch (err) {
-      alert(err.response?.data?.message || "Login failed");
+      Swal.fire({
+        title: "Error!",
+        text: err.response?.data?.message || "Login failed",
+        icon: "error",
+        confirmButtonText: "Cool",
+      });
+
       setLoading(false);
     }
   };

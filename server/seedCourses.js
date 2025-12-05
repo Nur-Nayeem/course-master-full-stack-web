@@ -7,109 +7,116 @@ import Course from "./models/Course.js";
 mongoose.connect(process.env.MONGODB_URI).then(async () => {
   await Course.insertMany([
     {
-      title: "Full-Stack Web Development Bootcamp 2025",
-      slug: "full-stack-web-dev-2025",
-      description:
-        "Master HTML, CSS, JavaScript, React, Node.js, MongoDB, and build full-stack projects.",
-      instructor: {
-        name: "Mr. James Carter",
-        role: "Senior Software Engineer",
-        about: "8+ years of experience in full-stack development.",
-        avatar: "https://i.ibb.co/8j5pPKR/teacher1.png",
-      },
-      thumbnail: "https://i.ibb.co/SffbS2C/course1.png",
-      price: 79.99,
-      oldPrice: 129.99,
-      rating: 4.8,
-      studentsCount: 15200,
+      title: "Full Stack Web Development",
+      description: "Learn MERN stack from scratch with hands-on projects.",
+      instructor: "John Doe",
+      thumbnail: "https://placehold.co/600x400",
+      price: { $numberInt: "120" },
+      rating: { $numberDouble: "4.8" },
       category: "Web Development",
-      tags: ["HTML", "CSS", "JavaScript", "React", "Node.js"],
-      content: [
+      tags: ["JavaScript", "React", "Node"],
+      lessons: [
         {
           title: "Introduction to Web Development",
-          lessons: [
-            { title: "What is Web Development?", duration: "08:15" },
-            { title: "Frontend vs Backend", duration: "10:00" },
-          ],
+          videoUrl: "https://www.youtube.com/embed/h9q2NHFhLks",
+          duration: "12:30",
+          quiz: {
+            questions: [
+              {
+                questionText: "What does MERN stand for?",
+                options: [
+                  "MongoDB, Express, React, Node",
+                  "MySQL, Express, React, Next.js",
+                  "MongoDB, Electron, Redux, Node",
+                ],
+                correctAnswer: { $numberInt: "0" },
+              },
+              {
+                questionText: "Which language runs in the browser?",
+                options: ["Python", "JavaScript", "PHP"],
+                correctAnswer: { $numberInt: "1" },
+              },
+            ],
+          },
         },
         {
-          title: "React Fundamentals",
-          lessons: [
-            { title: "React Components", duration: "12:30" },
-            { title: "Props & State", duration: "14:10" },
-          ],
+          title: "HTML & CSS Basics",
+          videoUrl: "https://www.youtube.com/embed/ZAqIoDhornk",
+          duration: "18:10",
+          quiz: {
+            questions: [
+              {
+                questionText: "What does HTML stand for?",
+                options: [
+                  "Hyper Trainer Marking Language",
+                  "HyperText Markup Language",
+                  "HighText Machine Language",
+                ],
+                correctAnswer: { $numberInt: "1" },
+              },
+              {
+                questionText: "Which CSS property controls text size?",
+                options: ["font-style", "text-size", "font-size"],
+                correctAnswer: { $numberInt: "2" },
+              },
+            ],
+          },
+        },
+        {
+          title: "JavaScript Fundamentals",
+          videoUrl: "https://www.youtube.com/embed/ZAqIoDhornk",
+          duration: "22:00",
+          quiz: {
+            questions: [
+              {
+                questionText:
+                  "Which keyword declares a variable in JavaScript?",
+                options: ["var", "let", "Both var and let"],
+                correctAnswer: { $numberInt: "2" },
+              },
+              {
+                questionText: "What is the output of typeof []?",
+                options: ["array", "object", "list"],
+                correctAnswer: { $numberInt: "1" },
+              },
+            ],
+          },
+        },
+        {
+          title: "React Basics",
+          videoUrl: "https://www.youtube.com/embed/react_basics",
+          duration: "20:15",
+          quiz: {
+            questions: [
+              {
+                questionText: "Which hook is used to manage state?",
+                options: ["useState", "useEffect", "useContext"],
+                correctAnswer: { $numberInt: "0" },
+              },
+            ],
+          },
+        },
+        {
+          title: "Node.js & Express",
+          videoUrl: "https://www.youtube.com/embed/node_express",
+          duration: "25:00",
+          quiz: {
+            questions: [
+              {
+                questionText:
+                  "Which method is used to create a server in Node.js?",
+                options: [
+                  "http.createServer",
+                  "express.createApp",
+                  "node.startServer",
+                ],
+                correctAnswer: { $numberInt: "0" },
+              },
+            ],
+          },
         },
       ],
-    },
-    {
-      title: "UI/UX Design Mastery 2025",
-      slug: "ui-ux-design-2025",
-      description:
-        "Learn UI/UX from fundamentals to advanced tools like Figma, prototyping, and usability testing.",
-      instructor: {
-        name: "Sarah Mitchell",
-        role: "UX Designer",
-        about: "Worked with 15+ global brands as a lead designer.",
-        avatar: "https://i.ibb.co/tH8Q2L8/teacher2.png",
-      },
-      thumbnail: "https://i.ibb.co/C6fBdDr/course2.png",
-      price: 59.99,
-      oldPrice: 109.99,
-      rating: 4.7,
-      studentsCount: 9800,
-      category: "UI/UX Design",
-      tags: ["Figma", "Prototyping", "Design Thinking", "Wireframes"],
-      content: [
-        {
-          title: "Introduction to UI/UX",
-          lessons: [
-            { title: "What is UI/UX?", duration: "07:40" },
-            { title: "Design Thinking Process", duration: "11:20" },
-          ],
-        },
-        {
-          title: "Figma Basics",
-          lessons: [
-            { title: "Frames & Layouts", duration: "15:10" },
-            { title: "Color & Typography", duration: "09:55" },
-          ],
-        },
-      ],
-    },
-    {
-      title: "Python for Data Science & Machine Learning",
-      slug: "python-data-science-2025",
-      description:
-        "Learn NumPy, Pandas, Matplotlib, and machine learning basics using Python.",
-      instructor: {
-        name: "Dr. Angela Yu",
-        role: "Data Scientist",
-        about: "15+ years in data analytics and ML.",
-        avatar: "https://i.ibb.co/XbXP3rL/teacher3.png",
-      },
-      thumbnail: "https://i.ibb.co/ZM5XZ1y/course3.png",
-      price: 84.99,
-      oldPrice: 129.99,
-      rating: 4.9,
-      studentsCount: 50400,
-      category: "Data Science",
-      tags: ["Python", "NumPy", "Pandas", "Machine Learning"],
-      content: [
-        {
-          title: "Python Basics",
-          lessons: [
-            { title: "Variables & Types", duration: "10:20" },
-            { title: "Loops & Conditions", duration: "14:00" },
-          ],
-        },
-        {
-          title: "Data Analysis",
-          lessons: [
-            { title: "Working with Pandas", duration: "16:10" },
-            { title: "Cleaning Data", duration: "12:50" },
-          ],
-        },
-      ],
+      studentsCount: { $numberInt: "0" },
     },
   ]);
 

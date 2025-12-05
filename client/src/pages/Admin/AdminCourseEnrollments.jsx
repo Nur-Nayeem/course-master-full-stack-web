@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
+import LoadingSimple from "../../components/Loading/LoadingSimple";
 
 export default function AdminCourseEnrollments() {
   const api = useAxiosSecure();
@@ -75,7 +76,7 @@ export default function AdminCourseEnrollments() {
 
       {/* Table */}
       {loading ? (
-        <div className="p-4">Loading students...</div>
+        <LoadingSimple />
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm text-slate-600">

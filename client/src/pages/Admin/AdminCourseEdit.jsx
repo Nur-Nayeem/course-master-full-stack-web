@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import CourseForm from "./CourseForm";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
+import LoadingSimple from "../../components/Loading/LoadingSimple";
 
 export default function AdminCourseEdit() {
   const { id } = useParams();
@@ -27,11 +28,7 @@ export default function AdminCourseEdit() {
   }, [id, api]);
 
   if (loading) {
-    return (
-      <div className="text-center py-10 text-gray-600 text-lg">
-        Loading course data...
-      </div>
-    );
+    return <LoadingSimple />;
   }
 
   if (!course) {

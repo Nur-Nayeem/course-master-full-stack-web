@@ -1,5 +1,6 @@
 import { useParams, Link, useNavigate } from "react-router";
 import useAxios from "../../hooks/useAxios";
+import Swal from "sweetalert2";
 import {
   FaPlayCircle,
   FaStar,
@@ -28,7 +29,7 @@ const CourseDetailsPage = () => {
       const res = await axiosInstance.get(`/api/courses/${id}`);
       return res.data.course;
     },
-    staleTime: 1000 * 60 * 5, // cache for 5 minutes
+    staleTime: 1000 * 60 * 30, // cache for 30 minutes
     refetchOnWindowFocus: true, // refetch if window regains focus
   });
 
@@ -44,19 +45,31 @@ const CourseDetailsPage = () => {
 
     try {
       await axiosSecureInstance.post(`/api/enrollments/${id}`);
-      alert("Enrollment Successful!");
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Enrollment Successful!",
+        showConfirmButton: false,
+        timer: 1500,
+      });
       setEnrolling(false);
       navigate(`/courses/${id}/player`);
     } catch (err) {
-      alert(err.response?.data?.message || "Failed to enroll");
+      Swal.fire({
+        title: "Error!",
+        text: err.response?.data?.message || "Failed to enroll",
+        icon: "error",
+        confirmButtonText: "Cool",
+      });
+
       setEnrolling(false);
     }
   };
 
   if (isLoading)
     return (
-      <div className="flex h-screen items-center justify-center text-gray-500">
-        Loading...
+      <div className="flex h-screen items-center justify-center text-white">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary/80" />
       </div>
     );
 

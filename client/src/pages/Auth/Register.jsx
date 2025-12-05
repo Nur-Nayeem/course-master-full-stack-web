@@ -8,6 +8,7 @@ import { FcGoogle } from "react-icons/fc";
 import { Link, useNavigate } from "react-router";
 import useAxios from "../../hooks/useAxios";
 import { useAuth } from "../../hooks/useAuth";
+import Swal from "sweetalert2";
 
 export default function Register() {
   const [showPass, setShowPass] = useState(false);
@@ -28,11 +29,22 @@ export default function Register() {
 
       login(res.data.user, res.data.token);
       setLoading(false);
-      console.log("resigter successfull");
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Resigter successfull! Check Your mail",
+        showConfirmButton: false,
+        timer: 1500,
+      });
 
       navigate("/");
     } catch (err) {
-      alert(err.response?.data?.message || "Registration failed");
+      Swal.fire({
+        title: "Error!",
+        text: err.response?.data?.message || "Registration failed",
+        icon: "error",
+        confirmButtonText: "Cool",
+      });
       setLoading(false);
     }
   };

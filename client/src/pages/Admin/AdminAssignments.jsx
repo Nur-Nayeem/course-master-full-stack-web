@@ -1,6 +1,7 @@
 import React from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
+import Swal from "sweetalert2";
 
 export default function AdminAssignments() {
   const api = useAxiosSecure();
@@ -27,21 +28,56 @@ export default function AdminAssignments() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["adminAssignments"] });
-      alert("Reviewed successfully!");
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Reviewed successfully!",
+        showConfirmButton: false,
+        timer: 1500,
+      });
     },
     onError: (err) => {
-      alert("Failed to review", err);
+      Swal.fire({
+        title: "Error!",
+        text: "Failed to review",
+        err,
+        icon: "error",
+        confirmButtonText: "Cool",
+      });
     },
   });
 
-  const handleReview = (enrollmentId, index) => {
-    const grade = parseInt(prompt("Enter grade (0-100)"));
-    if (isNaN(grade) || grade < 0 || grade > 100) {
-      alert("Invalid grade!");
-      return;
+  const handleReview = async (enrollmentId, index) => {
+    const { value: formValues } = await Swal.fire({
+      title: "Review Assignment",
+      html: `
+      <input id="swal-grade" type="number" min="0" max="100" class="swal2-input" placeholder="Enter grade (0-100)">
+      <input id="swal-comment" class="swal2-input" placeholder="Enter comment (optional)">
+    `,
+      focusConfirm: false,
+      showCancelButton: true,
+      confirmButtonText: "Submit",
+      preConfirm: () => {
+        const grade = parseInt(document.getElementById("swal-grade").value);
+        const comment = document.getElementById("swal-comment").value;
+        if (isNaN(grade) || grade < 0 || grade > 100) {
+          Swal.showValidationMessage(
+            "Grade must be a number between 0 and 100"
+          );
+          return false;
+        }
+        return { grade, comment };
+      },
+    });
+
+    if (formValues) {
+      reviewMutation.mutate({
+        enrollmentId,
+        index,
+        grade: formValues.grade,
+        comment: formValues.comment,
+      });
     }
-    const comment = prompt("Enter comment (optional)");
-    reviewMutation.mutate({ enrollmentId, index, grade, comment });
   };
 
   return (

@@ -7,7 +7,7 @@ import PrivateRoute from "./ProtectedRoutes/PrivateRoute";
 import Courses from "../pages/Courses/Courses";
 import CourseDetailsPage from "../pages/CourseDetails/CourseDetailsPage";
 import StudentDashboard from "../pages/Dashboard/StudentDashboard";
-import CoursePlayer from "../pages/Courses/CoursePlayer";
+import CoursePlayer from "../pages/CoursePlayer/CoursePlayer";
 import AdminLayout from "../Layoutes/AdminLayout";
 import AdminRoute from "./adminRoute/AdminRoute";
 import AdminCourses from "../pages/Admin/AdminCoursesManager";

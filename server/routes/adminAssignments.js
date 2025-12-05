@@ -72,7 +72,12 @@ router.post(
       if (!enrollment)
         return res.status(404).json({ message: "Enrollment not found" });
 
-      const assignment = enrollment.assignments[assignmentIndex];
+      // convert to number
+      const index = Number(assignmentIndex);
+      const assignment = enrollment.assignments.find(
+        (a) => a.lessonIndex === index
+      );
+
       if (!assignment)
         return res.status(404).json({ message: "Assignment not found" });
 
@@ -80,7 +85,6 @@ router.post(
       assignment.grade = grade;
       assignment.reviewerComment = reviewerComment;
 
-      // IMPORTANT FIX 🚀
       enrollment.markModified("assignments");
 
       await enrollment.save();

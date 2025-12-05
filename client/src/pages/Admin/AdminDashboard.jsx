@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { FaBookOpen, FaUsers, FaCheckCircle, FaClock } from "react-icons/fa";
-import AdminAnalytics from "./AdminAnalytics";
+import AdminAnalytics from "../../components/AdminComponents/AdminAnalytics";
 
 const AdminDashboard = () => {
   const axiosSecureInstance = useAxiosSecure();

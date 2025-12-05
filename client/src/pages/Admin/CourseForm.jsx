@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { useNavigate } from "react-router";
 import { useQueryClient } from "@tanstack/react-query";
+import Swal from "sweetalert2";
 import {
   Plus,
   Trash2,
@@ -310,11 +311,8 @@ export default function CourseForm({ initialData = null, isEditMode = false }) {
 
   const onSubmit = async (data) => {
     setSubmitting(true);
-    setSubmitMessage(null);
 
     try {
-      console.log(data);
-
       // Transform form data to match API/Joi schema
       const payload = {
         ...data,
@@ -340,8 +338,6 @@ export default function CourseForm({ initialData = null, isEditMode = false }) {
         })),
       };
 
-      console.log("Payload to send:", payload);
-
       // API call
       if (isEditMode) {
         await axiosSecureInstance.put(
@@ -357,31 +353,33 @@ export default function CourseForm({ initialData = null, isEditMode = false }) {
         await queryClient.invalidateQueries({ queryKey: ["adminCourses"] });
       }
 
-      setSubmitMessage({
-        type: "success",
-        text: isEditMode
+      // Success SweetAlert
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: isEditMode
           ? "Course updated successfully!"
           : "Course created successfully!",
+        showConfirmButton: false,
+        timer: 1500,
       });
 
       // Navigate back after short delay
       setTimeout(() => navigate("/admin/courses"), 1500);
     } catch (error) {
-      // Show detailed Joi validation errors if present
       const errors = error.response?.data?.errors;
-      if (errors && Array.isArray(errors) && errors.length > 0) {
-        setSubmitMessage({
-          type: "error",
-          text: errors.join(", "),
-        });
-      } else {
-        setSubmitMessage({
-          type: "error",
-          text: `Something went wrong: ${
-            error.response?.data?.message || error.message
-          }`,
-        });
-      }
+      const message =
+        errors && Array.isArray(errors) && errors.length > 0
+          ? errors.join(", ")
+          : error.response?.data?.message || error.message;
+
+      // Error SweetAlert
+      Swal.fire({
+        title: "Error!",
+        text: message,
+        icon: "error",
+        confirmButtonText: "Ok",
+      });
     } finally {
       setSubmitting(false);
     }

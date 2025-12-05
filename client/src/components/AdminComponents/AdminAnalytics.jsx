@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
+import { useQuery } from "@tanstack/react-query";
 import {
   ResponsiveContainer,
   LineChart,
@@ -9,30 +9,30 @@ import {
   Line,
   CartesianGrid,
 } from "recharts";
+import LoadingSimple from "../Loading/LoadingSimple";
 
 export default function AdminAnalytics({ days = 30 }) {
   const api = useAxiosSecure();
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetch = async () => {
-      setLoading(true);
-      try {
-        const res = await api.get(
-          `/api/admin/analytics/enrollments?days=${days}`
-        );
-        // expected: [{ date: '2025-12-01', count: 5 }, ...]
-        setData(res.data.data || res.data);
-      } catch (err) {
-        console.error("Failed to load analytics", err);
-      }
-      setLoading(false);
-    };
-    fetch();
-  }, [api, days]);
+  // TanStack Query
+  const {
+    data = [],
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["adminAnalytics", days],
+    queryFn: async () => {
+      const res = await api.get(
+        `/api/admin/analytics/enrollments?days=${days}`
+      );
+      return res.data.data || res.data;
+    },
+    staleTime: 1000 * 60 * 20, // cache for 20 minutes
+    refetchOnWindowFocus: false,
+  });
 
-  if (loading) return <div className="p-6 text-center">Loading chart...</div>;
+  if (isLoading) return <LoadingSimple />;
+  if (isError) return <p className="text-red-500">Failed to load analytics.</p>;
 
   return (
     <div style={{ height: 300 }}>
