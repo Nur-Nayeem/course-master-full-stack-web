@@ -43,4 +43,10 @@ const enrollmentSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// Speed up filtering by progress for stats
+enrollmentSchema.index({ progress: 1 });
+
+// Speed up date-based analytics
+enrollmentSchema.index({ createdAt: 1 });
+
 export default mongoose.model("Enrollment", enrollmentSchema);

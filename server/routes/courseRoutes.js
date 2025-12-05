@@ -5,7 +5,15 @@ const router = express.Router();
 
 router.get("/", async (req, res) => {
   try {
-    let { page = 1, limit = 12, search, category, sort, tags } = req.query;
+    let {
+      page = 1,
+      limit = 12,
+      search,
+      category,
+      sort,
+      tags,
+      popular,
+    } = req.query;
     page = parseInt(page);
     limit = parseInt(limit);
 
@@ -18,6 +26,10 @@ router.get("/", async (req, res) => {
       ];
     }
 
+    // if (search) {
+    //   filter.$text = { $search: search };
+    // }
+
     if (category) filter.category = category;
     if (tags) {
       const tagArr = tags.split(",").map((t) => t.trim());
@@ -25,8 +37,13 @@ router.get("/", async (req, res) => {
     }
 
     let sortQuery = { createdAt: -1 };
-    if (sort === "price_asc") sortQuery = { price: 1 };
-    else if (sort === "price_desc") sortQuery = { price: -1 };
+    if (popular === "true") {
+      sortQuery = { rating: -1, studentsCount: -1 }; // top-rated, then most students
+    } else if (sort === "price_asc") {
+      sortQuery = { price: 1 };
+    } else if (sort === "price_desc") {
+      sortQuery = { price: -1 };
+    }
 
     const total = await Course.countDocuments(filter);
 

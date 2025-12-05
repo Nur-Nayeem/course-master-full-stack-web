@@ -33,4 +33,11 @@ const courseSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// For fast search on title, instructor, and description
+courseSchema.index({ title: "text", instructor: "text", description: "text" });
+// For filtering & sorting by category and price
+courseSchema.index({ category: 1, price: 1 });
+// For tags filtering + sorting
+courseSchema.index({ tags: 1, createdAt: -1 });
+
 export default mongoose.model("Course", courseSchema);

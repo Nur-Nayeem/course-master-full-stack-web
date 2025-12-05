@@ -14,29 +14,43 @@ router.get("/", auth, isAdmin, async (req, res) => {
     const filter = {};
     if (courseId) filter.courseId = courseId;
 
-    const enrollments = await Enrollment.find(filter)
-      .populate("userId", "name email")
-      .populate("courseId", "title")
-      .lean();
-
-    const assignments = [];
-    enrollments.forEach((en) => {
-      en.assignments?.forEach((a, idx) => {
-        assignments.push({
-          enrollmentId: en._id,
-          assignmentIndex: idx,
-          user: en.userId,
-          course: en.courseId,
-          lessonIndex: a.lessonIndex,
-          answerText: a.answerText,
-          driveLink: a.driveLink,
-          submittedAt: a.submittedAt,
-          reviewed: a.reviewed,
-          grade: a.grade,
-          reviewerComment: a.reviewerComment,
-        });
-      });
-    });
+    const assignments = await Enrollment.aggregate([
+      { $match: filter },
+      { $unwind: "$assignments" },
+      {
+        $lookup: {
+          from: "users",
+          localField: "userId",
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+      { $unwind: "$user" },
+      {
+        $lookup: {
+          from: "courses",
+          localField: "courseId",
+          foreignField: "_id",
+          as: "course",
+        },
+      },
+      { $unwind: "$course" },
+      {
+        $project: {
+          enrollmentId: "$_id",
+          assignmentIndex: "$assignments.lessonIndex",
+          user: { name: "$user.name", email: "$user.email" },
+          course: { title: "$course.title" },
+          lessonIndex: "$assignments.lessonIndex",
+          answerText: "$assignments.answerText",
+          driveLink: "$assignments.driveLink",
+          submittedAt: "$assignments.submittedAt",
+          reviewed: "$assignments.reviewed",
+          grade: "$assignments.grade",
+          reviewerComment: "$assignments.reviewerComment",
+        },
+      },
+    ]);
 
     res.json({ assignments });
   } catch (err) {
