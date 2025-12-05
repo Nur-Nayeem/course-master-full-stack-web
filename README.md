@@ -116,6 +116,13 @@ Frontend runs on http://localhost:3173
 
 Backend runs on http://localhost:5000
 
+## Admin credentials:
+
+```bash
+email: admin@gmail.com
+password: 123456
+```
+
 ## API Routes
 
 ### Auth
