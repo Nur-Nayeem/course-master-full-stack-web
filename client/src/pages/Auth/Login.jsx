@@ -52,7 +52,9 @@ export default function Login() {
 
   return (
     <div>
-      <Navbar />
+      <header className="sticky top-0 z-50 w-full">
+        <Navbar />
+      </header>
       <div className="flex h-full grow flex-col py-32">
         <title>Course Master- Login</title>
         <div className="flex flex-1 items-center justify-center p-4 lg:p-8">

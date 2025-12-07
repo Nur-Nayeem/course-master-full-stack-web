@@ -12,8 +12,8 @@ const Navbar = () => {
   const { user, logout } = useAuth();
 
   return (
-    <nav className="fixed top-0 z-50 w-full shadow-sm bg-gray-100 px-2.5 sm:px-0 py-3">
-      <div className="flex items-center justify-between container mx-auto">
+    <nav className="shadow-sm bg-gray-100">
+      <div className="flex items-center justify-between container mx-auto py-4 px-2.5">
         <div className="flex flex-1 items-center gap-2">
           <div className="dropdown">
             <div tabIndex={0} role="button" className="lg:hidden">

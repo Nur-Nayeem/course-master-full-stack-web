@@ -8,27 +8,27 @@ export default function HeroSection() {
   const { setSearch } = use(QueryContext);
   return (
     <section className="w-full bg-linear-to-r from-primary/10 to-primary/5 py-16">
-      <div className="container mx-auto px-4 flex flex-col lg:flex-row items-center gap-10">
+      <div className="container mx-auto px-4 flex flex-col lg:flex-row items-center gap-10 ">
         {/* Left Text Section */}
         <div className="flex-1 space-y-6">
-          <h1 className="text-4xl md:text-5xl font-bold leading-tight text-secondary">
+          <h1 className="text-3xl md:text-5xl font-bold text-secondary">
             Learn Anything,
             <span className="text-primary"> Anytime,</span>
             Anywhere.
           </h1>
 
-          <p className="text-gray-600 text-lg">
+          <p className="text-gray-600 sm:text-lg">
             Explore thousands of high-quality courses from expert instructors.
             Upgrade your skills and build your future.
           </p>
 
           {/* Search Bar */}
-          <div className="flex items-center bg-white shadow-md rounded-xl px-4 py-3 w-full max-w-lg">
+          <div className="flex items-center bg-white shadow-md rounded-xl px-4 py-3 w-full md:max-w-lg sm:max-w-sm max-w-2xs">
             <FaSearch className="text-gray-500 text-xl" />
             <input
               type="text"
               placeholder="Search courses..."
-              className="flex-1 ml-3 outline-none text-gray-700"
+              className="w-full ml-3 outline-none text-gray-700"
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>

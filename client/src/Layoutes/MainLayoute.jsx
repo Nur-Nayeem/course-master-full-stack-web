@@ -6,7 +6,7 @@ import Footer from "../components/Footer/Footer";
 const MainLayoute = () => {
   return (
     <div className="bg-gray-100">
-      <header>
+      <header className="sticky top-0 z-50 w-full">
         <Navbar />
       </header>
       <main className="pt-16 min-h-[calc(100vh-409px)]">
