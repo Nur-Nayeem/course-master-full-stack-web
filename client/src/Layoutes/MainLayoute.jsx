@@ -9,7 +9,7 @@ const MainLayoute = () => {
       <header className="sticky top-0 z-50 w-full">
         <Navbar />
       </header>
-      <main className="pt-16 min-h-[calc(100vh-409px)]">
+      <main className="min-h-[calc(100vh-409px)]">
         <Outlet />
       </main>
       <footer>
