@@ -175,6 +175,6 @@ password: 123456
 
 - Frontend: [https://course-master-nur-nayeem.netlify.app](https://course-master-nur-nayeem.netlify.app/)
 
-- Backend: [https://server-ivory-two.vercel.app](https://server-ivory-two.vercel.app/)
+- Backend: [http://localhost:5000](http://localhost:5000/)
 
 - Github: [https://github.com/Nur-Nayeem/course-master-full-stack-web](https://github.com/Nur-Nayeem/course-master-full-stack-web)

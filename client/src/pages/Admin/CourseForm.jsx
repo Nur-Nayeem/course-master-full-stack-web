@@ -347,9 +347,11 @@ export default function CourseForm({ initialData = null, isEditMode = false }) {
         await queryClient.invalidateQueries({
           queryKey: ["adminCourse", initialData._id],
         });
+        await queryClient.invalidateQueries({ queryKey: ["courses"] });
       } else {
         await axiosSecureInstance.post(`/api/admin/courses`, payload);
         await queryClient.invalidateQueries({ queryKey: ["adminCourses"] });
+        await queryClient.invalidateQueries({ queryKey: ["courses"] });
       }
 
       // Success SweetAlert
