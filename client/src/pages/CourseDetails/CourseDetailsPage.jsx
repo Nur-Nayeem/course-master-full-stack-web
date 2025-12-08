@@ -85,6 +85,13 @@ const CourseDetailsPage = () => {
     }
   };
 
+  // Calculate button text
+  const getButtonText = () => {
+    if (enrolling) return "Enrolling...";
+    if (user && (isEnrolled || user.role === "admin")) return "Play";
+    return "Enroll Now";
+  };
+
   if (isLoading)
     return (
       <div className="flex h-screen items-center justify-center text-white">
@@ -292,17 +299,13 @@ const CourseDetailsPage = () => {
                 <button
                   disabled={enrolling}
                   onClick={
-                    isEnrolled
+                    user && (isEnrolled || user.role === "admin")
                       ? () => navigate(`/courses/${id}/player`)
                       : handleEnroll
                   }
                   className="btn-primary py-3 px-4 w-full disabled:opacity-50"
                 >
-                  {isEnrolled || user.role === "admin"
-                    ? "Play"
-                    : enrolling
-                    ? "Enrolling..."
-                    : "Enroll Now"}
+                  {getButtonText()}
                 </button>
 
                 <p className="text-center text-xs text-gray-500">
