@@ -2,6 +2,7 @@ import express from "express";
 import Enrollment from "../models/Enrollment.js";
 import Course from "../models/Course.js";
 import { auth } from "../middleware/auth.js";
+import User from "../models/User.js";
 
 const router = express.Router();
 
@@ -28,7 +29,7 @@ router.post("/:courseId", auth, async (req, res) => {
     if (!course) return res.status(404).send({ message: "Course not found" });
 
     const exists = await Enrollment.findOne({ userId, courseId });
-    if (exists) return res.status(400).send({ message: "Already enrolled" });
+    if (exists) return res.send({ isEnrolled: true });
 
     const enrollment = await Enrollment.create({
       userId,
@@ -40,6 +41,19 @@ router.post("/:courseId", auth, async (req, res) => {
     await Course.findByIdAndUpdate(courseId, { $inc: { studentsCount: 1 } });
 
     res.send({ message: "Enrolled", enrollment });
+  } catch (err) {
+    res.status(500).send({ message: err.message });
+  }
+});
+
+router.get("/:courseId/isEnrolled", auth, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { courseId } = req.params;
+
+    const exists = await Enrollment.findOne({ userId, courseId });
+
+    return res.send({ isEnrolled: !!exists });
   } catch (err) {
     res.status(500).send({ message: err.message });
   }
