@@ -146,7 +146,7 @@ export default function CoursePlayer() {
         <h2 className="text-2xl font-bold">Access Denied</h2>
         <p>You need to enroll in this course to view the content.</p>
         <Link
-          to={`/course/${id}`}
+          to={`/courses/${id}`}
           className="px-6 py-2 bg-primary/90 text-white rounded-lg hover:bg-primary"
         >
           Go to Course Page

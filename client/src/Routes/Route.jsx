@@ -17,6 +17,8 @@ import AdminDashboard from "../pages/Admin/AdminDashboard";
 import AdminCourseEnrollments from "../pages/Admin/AdminCourseEnrollments";
 import AdminAssignments from "../pages/Admin/AdminAssignments";
 import AboutUs from "../pages/AboutUsPAge/AboutUs";
+import NotFound from "../pages/NotFound/NotFound";
+import AuthLAyout from "../Layoutes/AuthLAyout";
 
 const router = createBrowserRouter([
   {
@@ -94,12 +96,22 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/login",
-    Component: Login,
+    path: "/",
+    Component: AuthLAyout,
+    children: [
+      {
+        path: "/login",
+        Component: Login,
+      },
+      {
+        path: "/register",
+        Component: Register,
+      },
+    ],
   },
   {
-    path: "/register",
-    Component: Register,
+    path: "*",
+    Component: NotFound,
   },
 ]);
 export default router;

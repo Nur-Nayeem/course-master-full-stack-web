@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect } from "react";
 import { useAuth } from "./useAuth";
 const axiosSecure = axios.create({
-  baseURL: "https://server-ivory-two.vercel.app",
+  baseURL: "http://localhost:5000",
 });
 
 const useAxiosSecure = () => {

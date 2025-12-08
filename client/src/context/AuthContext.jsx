@@ -26,7 +26,6 @@ const AuthProvider = ({ children }) => {
     localStorage.removeItem("token");
   };
 
-  // Auto-logout if token removed manually
   useEffect(() => {
     const autoLogout = () => {
       if (!token) setUser(null);
@@ -35,7 +34,16 @@ const AuthProvider = ({ children }) => {
   }, [token]);
 
   return (
-    <AuthContext value={{ user, token, login, logout, loading, setLoading }}>
+    <AuthContext
+      value={{
+        user,
+        token,
+        login,
+        logout,
+        loading,
+        setLoading,
+      }}
+    >
       {children}
     </AuthContext>
   );

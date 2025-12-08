@@ -35,6 +35,18 @@ const CourseDetailsPage = () => {
 
   const course = data;
 
+  const { data: enrolledData, isLoading: enrolledLoading } = useQuery({
+    queryKey: ["isEnrolled", id, user?.id],
+    enabled: !!user, // only check when user is logged in
+    queryFn: async () => {
+      const res = await axiosSecureInstance.get(
+        `/api/enrollments/${id}/isEnrolled`
+      );
+      return res.data;
+    },
+  });
+  const isEnrolled = enrolledData?.isEnrolled;
+
   const handleEnroll = async () => {
     setEnrolling(true);
     if (!user) {
@@ -45,22 +57,29 @@ const CourseDetailsPage = () => {
 
     try {
       await axiosSecureInstance.post(`/api/enrollments/${id}`);
-      Swal.fire({
-        position: "center",
-        icon: "success",
-        title: "Enrollment Successful!",
-        showConfirmButton: false,
-        timer: 1500,
-      });
+      if (user.role !== "admin") {
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Enrollment Successful!",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      }
+
       setEnrolling(false);
       navigate(`/courses/${id}/player`);
     } catch (err) {
-      Swal.fire({
-        title: "Error!",
-        text: err.response?.data?.message || "Failed to enroll",
-        icon: "error",
-        confirmButtonText: "Cool",
-      });
+      if (user !== "admin") {
+        Swal.fire({
+          title: "Error!",
+          text: err.response?.data?.message || "Failed to enroll",
+          icon: "error",
+          confirmButtonText: "Cool",
+        });
+      } else {
+        navigate(`/courses/${id}/player`);
+      }
 
       setEnrolling(false);
     }
@@ -272,10 +291,18 @@ const CourseDetailsPage = () => {
 
                 <button
                   disabled={enrolling}
-                  onClick={handleEnroll}
+                  onClick={
+                    isEnrolled
+                      ? () => navigate(`/courses/${id}/player`)
+                      : handleEnroll
+                  }
                   className="btn-primary py-3 px-4 w-full disabled:opacity-50"
                 >
-                  {enrolling ? "Enrolling..." : "Enroll Now"}
+                  {isEnrolled || user.role === "admin"
+                    ? "Play"
+                    : enrolling
+                    ? "Enrolling..."
+                    : "Enroll Now"}
                 </button>
 
                 <p className="text-center text-xs text-gray-500">
