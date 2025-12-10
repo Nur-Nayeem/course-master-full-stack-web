@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { use, useEffect } from "react";
 import { Link, Outlet, useLocation } from "react-router";
 import {
   HomeIcon,
@@ -10,11 +10,26 @@ import {
 import { FaLaptopCode } from "react-icons/fa";
 import { TbLayoutSidebarLeftCollapse } from "react-icons/tb";
 import { useAuth } from "../hooks/useAuth";
+import { AdminContext } from "../context/Contexts";
 
 export default function AdminLayout() {
-  const [collapsed, setCollapsed] = useState(false);
   const location = useLocation();
   const { logout } = useAuth();
+  const { collapsed, setCollapsed } = use(AdminContext);
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) {
+        setCollapsed(true);
+      } else {
+        setCollapsed(false);
+      }
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, [setCollapsed]);
 
   const nav = [
     { to: "/admin", label: "Overview", icon: <HomeIcon size={16} /> },

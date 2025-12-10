@@ -1,271 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { useForm, useFieldArray } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import Swal from "sweetalert2";
-import {
-  Plus,
-  Trash2,
-  Save,
-  BookOpen,
-  HelpCircle,
-  List,
-  Video,
-  Tag,
-  CheckCircle,
-} from "lucide-react";
+import { Save, List, Tag } from "lucide-react";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
-
-const OptionList = ({ nestIndex, questionIndex, control, register }) => {
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: `lessons.${nestIndex}.quiz.questions.${questionIndex}.options`,
-  });
-
-  return (
-    <div className="mt-2 ml-4">
-      <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
-        Answer Options
-      </label>
-      {fields.map((item, k) => (
-        <div key={item.id} className="flex gap-2 mb-2 items-center">
-          <span className="text-sm text-gray-400 font-mono">{k + 1}.</span>
-          <input
-            {...register(
-              `lessons.${nestIndex}.quiz.questions.${questionIndex}.options.${k}.value`,
-              { required: true }
-            )}
-            placeholder={`Option ${k + 1}`}
-            className="flex-1 p-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-primary outline-none"
-          />
-          <button
-            type="button"
-            onClick={() => remove(k)}
-            className="text-red-500 hover:text-red-700 p-1"
-          >
-            <Trash2 size={14} />
-          </button>
-        </div>
-      ))}
-      <button
-        type="button"
-        onClick={() => append({ value: "" })}
-        className="text-xs flex items-center gap-1 text-primary/90 hover:text-primary font-medium mt-1"
-      >
-        <Plus size={12} /> Add Option
-      </button>
-
-      {/* correct answer Selection */}
-      <div className="mt-3">
-        <label className="text-xs font-semibold text-gray-500">
-          Correct Answer (Index)
-        </label>
-        <select
-          {...register(
-            `lessons.${nestIndex}.quiz.questions.${questionIndex}.correctAnswer`,
-            { required: true }
-          )}
-          className="mt-1 block w-full pl-3 pr-10 py-2 text-sm border-gray-300 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-md border"
-        >
-          <option value="">Select correct option...</option>
-          {fields.map((_, idx) => (
-            <option key={idx} value={idx}>
-              Option {idx + 1}
-            </option>
-          ))}
-        </select>
-      </div>
-    </div>
-  );
-};
-
-// 2. Question List Component
-const QuestionList = ({ nestIndex, control, register, errors }) => {
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: `lessons.${nestIndex}.quiz.questions`,
-  });
-
-  return (
-    <div className="mt-4 border-t border-gray-200 pt-4">
-      <h4 className="flex items-center gap-2 text-sm font-bold text-secondary/80 mb-3">
-        <HelpCircle size={16} /> Quiz Questions
-      </h4>
-
-      {fields.length === 0 && (
-        <p className="text-sm text-gray-400 italic mb-3">
-          No questions added yet.
-        </p>
-      )}
-
-      <div className="space-y-4">
-        {fields.map((item, k) => (
-          <div
-            key={item.id}
-            className="bg-gray-50 p-4 rounded-lg border border-gray-200 relative"
-          >
-            <button
-              type="button"
-              onClick={() => remove(k)}
-              className="absolute top-2 right-2 text-red-500 hover:text-red-600"
-            >
-              <Trash2 size={16} />
-            </button>
-
-            <div className="mb-3 pr-8">
-              <label className="block text-sm font-medium text-secondary/80 mb-1">
-                Question Text
-              </label>
-              <input
-                {...register(
-                  `lessons.${nestIndex}.quiz.questions.${k}.questionText`,
-                  { required: "Question text is required" }
-                )}
-                className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-primary outline-none"
-                placeholder="e.g., What is the capital of France?"
-              />
-            </div>
-
-            <OptionList
-              nestIndex={nestIndex}
-              questionIndex={k}
-              control={control}
-              register={register}
-              errors={errors}
-            />
-          </div>
-        ))}
-      </div>
-
-      <button
-        type="button"
-        onClick={() =>
-          append({
-            questionText: "",
-            options: [{ value: "" }, { value: "" }],
-            correctAnswer: 0,
-          })
-        }
-        className="mt-3 inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded text-primary bg-indigo-100 hover:bg-indigo-200"
-      >
-        <Plus size={14} className="mr-1" /> Add Question
-      </button>
-    </div>
-  );
-};
-
-// 3. Lesson List Component
-const LessonList = ({ control, register, errors }) => {
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: "lessons",
-  });
-
-  return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between border-b pb-2">
-        <h3 className="text-lg font-medium text-secondary flex items-center gap-2">
-          <BookOpen size={20} /> Curriculum
-        </h3>
-      </div>
-
-      {fields.map((item, index) => (
-        <div
-          key={item.id}
-          className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden"
-        >
-          <div className="bg-gray-50 px-4 py-3 border-b border-gray-200 flex justify-between items-center">
-            <span className="font-semibold text-secondary/90">
-              Lesson {index + 1}
-            </span>
-            <button
-              type="button"
-              onClick={() => remove(index)}
-              className="text-red-500 hover:text-red-700 hover:bg-red-50 p-1 rounded transition-colors"
-            >
-              <Trash2 size={18} />
-            </button>
-          </div>
-
-          <div className="p-4 space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-secondary/90">
-                  Lesson Title
-                </label>
-                <input
-                  {...register(`lessons.${index}.title`, {
-                    required: "lassion title is required",
-                  })}
-                  className="mt-1 w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-primary outline-none"
-                  placeholder="e.g. Introduction to React"
-                />
-                {errors?.lessons?.[index]?.title && (
-                  <p className="text-red-500 text-xs mt-1">
-                    Lesson title is required
-                  </p>
-                )}
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-secondary/80">
-                  Duration
-                </label>
-                <input
-                  {...register(`lessons.${index}.duration`)}
-                  className="mt-1 w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-primary outline-none"
-                  placeholder="e.g. 15:30"
-                />
-              </div>
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-secondary/80">
-                  Video URL
-                </label>
-                <div className="flex mt-1">
-                  <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
-                    <Video size={16} />
-                  </span>
-                  <input
-                    {...register(`lessons.${index}.videoUrl`)}
-                    className="flex-1 w-full p-2 border border-gray-300 rounded-r-md focus:ring-2 focus:ring-primary outline-none"
-                    placeholder="https://..."
-                  />
-                </div>
-              </div>
-            </div>
-
-            <QuestionList
-              nestIndex={index}
-              control={control}
-              register={register}
-              errors={errors}
-            />
-          </div>
-        </div>
-      ))}
-      <button
-        type="button"
-        onClick={() => {
-          append({
-            title: "",
-            videoUrl: "",
-            duration: "",
-            quiz: { questions: [] },
-          });
-        }}
-        className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary/90 hover:bg-primary focus:outline-none"
-      >
-        <Plus size={16} className="mr-2" /> Add Lesson
-      </button>
-    </div>
-  );
-};
+import LessonList from "../../components/AdminComponents/CourseFormComponents/LessionList";
+import { imageUpload } from "../../lib";
 
 export default function CourseForm({ initialData = null, isEditMode = false }) {
   const [submitting, setSubmitting] = useState(false);
   const axiosSecureInstance = useAxiosSecure();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-
   const {
     register,
     control,
@@ -284,7 +31,6 @@ export default function CourseForm({ initialData = null, isEditMode = false }) {
     },
     mode: "onSubmit",
   });
-
   //  Populate form with initialData when in edit mode
   useEffect(() => {
     if (initialData && isEditMode) {
@@ -312,9 +58,12 @@ export default function CourseForm({ initialData = null, isEditMode = false }) {
     setSubmitting(true);
 
     try {
-      // Transform form data to match API/Joi schema
+      const image = await imageUpload(data.image[0]);
+      console.log(image);
+
       const payload = {
         ...data,
+        thumbnail: image,
         price: Number(data.price),
         tags: data.tags
           ? data.tags
@@ -365,7 +114,6 @@ export default function CourseForm({ initialData = null, isEditMode = false }) {
         timer: 1500,
       });
 
-      // Navigate back after short delay
       setTimeout(() => navigate("/admin/courses"), 1500);
     } catch (error) {
       const errors = error.response?.data?.errors;
@@ -506,15 +254,28 @@ export default function CourseForm({ initialData = null, isEditMode = false }) {
 
             <div className="md:col-span-2">
               <label className="block text-sm font-medium text-gray-700">
-                Thumbnail URL
+                Thumbnail
               </label>
-              <input
+              <div className="relative">
+                <input
+                  type="file"
+                  id="image"
+                  accept="image/*"
+                  {...register("image")}
+                  className="file-input w-full h-12 pr-4 rounded-lg border-2 border-primary/50  bg-gray-200/10 focus:outline-none"
+                />
+                <p className="mt-1 text-xs text-gray-400">
+                  PNG, JPG or JPEG (max 2MB)
+                </p>
+              </div>
+              {/* <input
                 {...register("thumbnail", {
                   required: "thumbnail is required",
                 })}
                 className="mt-1 block w-full p-2.5 border border-gray-300 rounded-md focus:ring-primary focus:border-primary"
                 placeholder="https://example.com/image.jpg"
-              />
+              /> */}
+
               {errors.thumbnail && (
                 <span className="text-red-500 text-xs">
                   {errors.thumbnail.message}

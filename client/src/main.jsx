@@ -7,6 +7,7 @@ import router from "./Routes/Route.jsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import QueryProvider from "./context/QueryContext.jsx";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import AdminContextProvider from "./context/AdminContextProvider.jsx";
 
 const queryClient = new QueryClient();
 
@@ -16,7 +17,9 @@ createRoot(document.getElementById("root")).render(
       <QueryProvider>
         <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
           <AuthProvider>
-            <RouterProvider router={router} />
+            <AdminContextProvider>
+              <RouterProvider router={router} />
+            </AdminContextProvider>
           </AuthProvider>
         </GoogleOAuthProvider>
       </QueryProvider>
