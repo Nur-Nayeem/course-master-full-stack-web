@@ -81,21 +81,12 @@ const Navbar = () => {
                 tabIndex="-1"
                 className="menu dropdown-content bg-base-200 rounded-box z-1 mt-4 w-52 p-2 shadow-sm"
               >
-                {user.role === "admin" ? (
-                  <Link
-                    to="/admin"
-                    className="px-4 py-3 hover:text-primary transition font-semibold"
-                  >
-                    Dashboard
-                  </Link>
-                ) : (
-                  <Link
-                    to="/dashboard"
-                    className="px-4 py-3 hover:text-primary transition font-semibold"
-                  >
-                    Dashboard
-                  </Link>
-                )}
+                <Link
+                  to="/dashboard"
+                  className="px-4 py-3 hover:text-primary transition font-semibold"
+                >
+                  Dashboard
+                </Link>
 
                 <div
                   onClick={logout}

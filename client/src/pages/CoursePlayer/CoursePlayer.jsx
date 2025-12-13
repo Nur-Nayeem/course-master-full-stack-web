@@ -9,6 +9,7 @@ import ProgressHeader from "../../components/coursePlayerComponents/ProgressHead
 import LessonSidebar from "../../components/coursePlayerComponents/LessonSidebar";
 import LoadingSimple from "../../components/Loading/LoadingSimple";
 import Swal from "sweetalert2";
+import { useAuth } from "../../hooks/useAuth";
 export default function CoursePlayer() {
   const { id } = useParams();
   const axiosSecure = useAxiosSecure();
@@ -22,6 +23,8 @@ export default function CoursePlayer() {
 
   const [quizAnswers, setQuizAnswers] = useState({});
   const [assignmentLink, setAssignmentLink] = useState("");
+
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -140,7 +143,9 @@ export default function CoursePlayer() {
 
   if (loading) return <LoadingSimple />;
 
-  if (!enrollment)
+  const isAdmin = user?.role === "admin";
+
+  if (!enrollment && !isAdmin)
     return (
       <div className="flex flex-col h-screen items-center justify-center bg-gray-50 text-gray-800 space-y-4">
         <h2 className="text-2xl font-bold">Access Denied</h2>

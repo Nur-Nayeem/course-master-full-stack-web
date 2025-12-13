@@ -4,4 +4,4 @@ export const AuthContext = createContext();
 
 export const QueryContext = createContext();
 
-export const AdminContext = createContext();
+export const DashBoardContext = createContext();

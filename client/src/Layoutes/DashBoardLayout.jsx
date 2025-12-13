@@ -10,12 +10,12 @@ import {
 import { FaLaptopCode } from "react-icons/fa";
 import { TbLayoutSidebarLeftCollapse } from "react-icons/tb";
 import { useAuth } from "../hooks/useAuth";
-import { AdminContext } from "../context/Contexts";
+import { DashBoardContext } from "../context/Contexts";
 
-export default function AdminLayout() {
+export default function DashBoardLayout() {
   const location = useLocation();
-  const { logout } = useAuth();
-  const { collapsed, setCollapsed } = use(AdminContext);
+  const { user, logout } = useAuth();
+  const { collapsed, setCollapsed } = use(DashBoardContext);
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 768) {
@@ -32,19 +32,19 @@ export default function AdminLayout() {
   }, [setCollapsed]);
 
   const nav = [
-    { to: "/admin", label: "Overview", icon: <HomeIcon size={16} /> },
+    { to: "/dashboard", label: "Overview", icon: <HomeIcon size={16} /> },
     {
-      to: "/admin/courses",
+      to: "/dashboard/courses",
       label: "Courses",
       icon: <BookOpenIcon size={16} />,
     },
     {
-      to: "/admin/enrollments",
+      to: "/dashboard/enrollments",
       label: "Enrollments",
       icon: <UsersIcon size={16} />,
     },
     {
-      to: "/admin/assignments",
+      to: "/dashboard/assignments",
       label: "Assignments",
       icon: <ClipboardListIcon size={16} />,
     },
@@ -73,20 +73,34 @@ export default function AdminLayout() {
         </div>
 
         <nav className="flex-1 px-2 py-2 space-y-1">
-          {nav.map((n) => (
+          {user?.role === "admin" ? (
+            nav.map((n) => (
+              <Link
+                key={n.to}
+                to={n.to}
+                className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-sm ${
+                  isActive(n.to)
+                    ? "bg-indigo-50 text-primary font-medium"
+                    : "text-secondary/90 hover:bg-slate-100"
+                }`}
+              >
+                <div>{n.icon}</div>
+                {!collapsed && <span>{n.label}</span>}
+              </Link>
+            ))
+          ) : (
             <Link
-              key={n.to}
-              to={n.to}
+              to={nav[0].to}
               className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-sm ${
-                isActive(n.to)
+                isActive(nav[0].to)
                   ? "bg-indigo-50 text-primary font-medium"
                   : "text-secondary/90 hover:bg-slate-100"
               }`}
             >
-              <div>{n.icon}</div>
-              {!collapsed && <span>{n.label}</span>}
+              <div>{nav[0].icon}</div>
+              {!collapsed && <span>{nav[0].label}</span>}
             </Link>
-          ))}
+          )}
         </nav>
 
         <div className="p-3 border-t border-slate-100">

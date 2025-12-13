@@ -6,10 +6,7 @@ import Register from "../pages/Auth/Register";
 import PrivateRoute from "./ProtectedRoutes/PrivateRoute";
 import Courses from "../pages/Courses/Courses";
 import CourseDetailsPage from "../pages/CourseDetails/CourseDetailsPage";
-import StudentDashboard from "../pages/Dashboard/StudentDashboard";
 import CoursePlayer from "../pages/CoursePlayer/CoursePlayer";
-import AdminLayout from "../Layoutes/AdminLayout";
-import AdminRoute from "./adminRoute/AdminRoute";
 import AdminCourses from "../pages/Admin/AdminCoursesManager";
 import AdminCourseCreate from "../pages/Admin/AdminCourseCreate";
 import AdminCourseEdit from "../pages/Admin/AdminCourseEdit";
@@ -19,6 +16,8 @@ import AdminAssignments from "../pages/Admin/AdminAssignments";
 import AboutUs from "../pages/AboutUsPAge/AboutUs";
 import NotFound from "../pages/NotFound/NotFound";
 import AuthLAyout from "../Layoutes/AuthLAyout";
+import DashBoardLayout from "../Layoutes/DashBoardLayout";
+import DashboardHome from "../pages/Dashboard/DashBoardHome";
 
 const router = createBrowserRouter([
   {
@@ -49,29 +48,19 @@ const router = createBrowserRouter([
           </PrivateRoute>
         ),
       },
-      {
-        path: "/dashboard",
-        element: (
-          <PrivateRoute>
-            <StudentDashboard />
-          </PrivateRoute>
-        ),
-      },
     ],
   },
   {
-    path: "/admin",
+    path: "/dashboard",
     element: (
       <PrivateRoute>
-        <AdminRoute>
-          <AdminLayout />
-        </AdminRoute>
+        <DashBoardLayout />
       </PrivateRoute>
     ),
     children: [
       {
         index: true,
-        Component: AdminDashboard,
+        Component: DashboardHome,
       },
       {
         path: "courses",
@@ -95,6 +84,7 @@ const router = createBrowserRouter([
       },
     ],
   },
+
   {
     path: "/",
     Component: AuthLAyout,
